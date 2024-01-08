@@ -1,0 +1,6 @@
+@Gestor_Acadêmico_HostAddress = http://localhost:5217
+
+GET {{Gestor_Acadêmico_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
