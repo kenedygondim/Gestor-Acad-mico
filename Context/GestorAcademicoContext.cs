@@ -17,7 +17,6 @@ namespace Gestor_Acadêmico.Context
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<StudentSubject> StudentSubjects { get; set; }
         public DbSet<Grade> Grades { get; set; }
-        public DbSet<StudentGrade> StudentGrades { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Turn> Turns { get; set; }
     
@@ -83,7 +82,11 @@ namespace Gestor_Acadêmico.Context
                 .OnDelete(DeleteBehavior.SetNull);
 
             
-                
+            modelBuilder.Entity<Student>()
+                .HasMany(stu => stu.Grades)
+                .WithOne(gra => gra.Student)
+                .HasForeignKey(gra => gra.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
     } 
 }
 

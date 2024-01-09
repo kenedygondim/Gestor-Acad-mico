@@ -17,11 +17,11 @@ namespace Gestor_Acadêmico.Models
         [Range(0, 10)]
         public decimal Balance { get; private set; }
 
-        public StudentGrade Student { get; set; }
+        public int StudentId { get; set; }
+        public Student Student { get; set; }
 
         public int SubjectId { get; set; }
         public Subject Subject { get; set; }
-
 
         public void CalculateBalance()
         {

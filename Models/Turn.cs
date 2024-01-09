@@ -8,7 +8,7 @@ namespace Gestor_Acadêmico.Models
         public int Id { get; set; }
 
         [Required]
-        public string TurnCourse { get; set; } = string.Empty;
+        public string TurnCourse { get;  set; } = string.Empty;
 
         public IEnumerable<Course> Courses { get; set; }
 

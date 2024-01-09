@@ -1,28 +1,32 @@
 using ASPDotnetFC;
 using Gestor_Acadêmico;
 using Gestor_Acadêmico.Context;
+using Gestor_Acadêmico.Interfaces;
+using Gestor_Acadêmico.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+//controladores (permite ciclos)
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
+//dbcontext
 builder.Services.AddDbContext<GestorAcademicoContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+//swagger
 builder.Services.AddSwaggerGen();
-
+//semear dados
 builder.Services.AddTransient<Seed>();
-
-//serviços do automapper
+//automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-//permite ciclos
+builder.Services.AddScoped<ICategoryCourseRepository, CategoryCourseRepository>();
+builder.Services.AddScoped<IGradeRepository, GradeRepository>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
+builder.Services.AddScoped<ITurnRepository,  TurnRepository>(); 
 
 var app = builder.Build();
 
@@ -33,7 +37,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

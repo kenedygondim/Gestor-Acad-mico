@@ -1,14 +1,16 @@
-﻿using Gestor_Acadêmico.Models;
+﻿using Gestor_Acadêmico.Dto;
+using Gestor_Acadêmico.Models;
 
 namespace Gestor_Acadêmico.Interfaces
 {
     public interface ICourseRepository
     {
-        IEnumerable<Course> GetCourses();
-        Course GetCourseById(int courseId);
-        Course GetCourseByName(string courseName);
-        bool CreateCourse(Course course);
-        bool UpdateCourse(Course course);   
-        bool DeleteCourse(int courseId);
+        Task<IEnumerable<Course>> GetCourses();
+        Task<Course> GetCourseById(int courseId);
+        Task<Course> GetCourseByName(string courseName);
+        Task<bool> CreateCourse(Course course);
+        Task<bool> UpdateCourse(Course course);   
+        Task<bool> DeleteCourse(int courseId);
+        Task<bool> Save();
     }
 }

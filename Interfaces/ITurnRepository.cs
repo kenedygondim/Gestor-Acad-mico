@@ -4,9 +4,10 @@ namespace Gestor_Acadêmico.Interfaces
 {
     public interface ITurnRepository
     {
-        IEnumerable<Turn> GetTurns();
-        Turn GetTurnById(int turnId);
-        Turn GetTurnByName(string turnName);
-        bool DeleteTurn(int turnId);
+        Task<IEnumerable<Turn>> GetTurns();
+        Task<Turn> GetTurnById(int turnId);
+        Task<Turn> GetTurnByName(string turnName);
+        Task<bool> DeleteTurn(int turnId);
+        Task<bool> Save();
     }
 }

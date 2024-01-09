@@ -5,6 +5,7 @@ namespace Gestor_Acadêmico.Dto
 {
     public class TurnDto
     {
+        [Key]
         public int Id { get; set; }
         [Required]
         public string TurnCourse { get; set; } = string.Empty;

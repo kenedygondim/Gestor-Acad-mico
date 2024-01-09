@@ -11,6 +11,9 @@ namespace Gestor_Acadêmico.Models
         public int Id { get; set; }
 
         [Required]
+        public string Status { get; set; } = string.Empty;
+
+        [Required]
         public string FullName { get; set; } = string.Empty;
 
         [Required]
@@ -31,12 +34,28 @@ namespace Gestor_Acadêmico.Models
         [EmailAddress]
         public string EmailAddress { get; set; } = string.Empty;
 
-        public decimal GPA { get; set; }
+        public decimal GPA { get; private set; }
 
         public IEnumerable<StudentCourse> Courses { get; set; }
 
         public IEnumerable<StudentSubject> Subjects { get; set; }
 
-        public IEnumerable<StudentGrade> Grades { get; set; }
+        public IEnumerable<Grade> Grades { get; set; }
+
+        public void CalcularGPA()
+        {
+            if (Grades != null && Grades.Any())
+            {
+                decimal somaNotas = Grades.Sum(g => g.Balance);
+                decimal mediaNotas = somaNotas / Grades.Count();
+
+                GPA = mediaNotas;
+
+                return;
+            }
+                GPA = 0;
+        }
+
+        
     }
 }

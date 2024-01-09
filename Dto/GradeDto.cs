@@ -1,9 +1,11 @@
 ﻿using Gestor_Acadêmico.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gestor_Acadêmico.Dto
 {
     public class GradeDto
     {
+        [Key]
         public int Id { get; set; }
         public decimal Frequence { get; set; }
         public decimal FirstAvaliation { get; set; }

@@ -27,6 +27,6 @@ namespace Gestor_Acadêmico.Models
 
         public IEnumerable<StudentSubject> Students { get; set; }
 
-         public Grade Grade { get; set; }
+        public Grade Grade { get; set; }
     }
 }

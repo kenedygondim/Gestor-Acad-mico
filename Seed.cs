@@ -3,7 +3,7 @@ using Gestor_Acadêmico.Models;
 
 namespace Gestor_Acadêmico
 {
-    public class Seed (GestorAcademicoContext context)
+    public class Seed (GestorAcademicoContext context) 
     {
         private readonly GestorAcademicoContext gestorAcademicoContext = context;
 
