@@ -27,6 +27,6 @@ namespace Gestor_Acadêmico.Models
         [EmailAddress]
         public string EmailAddress { get; set; } = string.Empty;
 
-        public IEnumerable<Subject> Subjects { get; set; }
+        public IEnumerable<Subject>? Subjects { get; set; }
     }
 }

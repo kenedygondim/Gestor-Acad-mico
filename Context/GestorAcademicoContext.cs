@@ -7,7 +7,7 @@ namespace Gestor_Acadêmico.Context
     {
         public GestorAcademicoContext(DbContextOptions<GestorAcademicoContext> options) : base(options) 
         {
-            Database.EnsureCreated();
+            
         }
 
         public DbSet<Student> Students { get; set; }
@@ -23,6 +23,32 @@ namespace Gestor_Acadêmico.Context
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+            modelBuilder.Entity<Grade>()
+            .Property(g => g.Activities)
+            .HasColumnType("decimal(4,2)");
+
+            modelBuilder.Entity<Grade>()
+            .Property(g => g.FirstAvaliation)
+            .HasColumnType("decimal(4,2)");
+
+            modelBuilder.Entity<Grade>()
+            .Property(g => g.SecondAvaliation)
+            .HasColumnType("decimal(4,2)");
+
+            modelBuilder.Entity<Grade>()
+            .Property(g => g.Balance)
+            .HasColumnType("decimal(4,2)");
+
+            modelBuilder.Entity<Grade>()
+            .Property(g => g.Frequence)
+            .HasColumnType("decimal(4,2)");
+
+            modelBuilder.Entity<Student>()
+            .Property(g => g.GPA)
+            .HasColumnType("decimal(4,2)");
+
+
+
             modelBuilder.Entity<StudentCourse>().HasKey(stucou => new { stucou.StudentId, stucou.CourseId });
             modelBuilder.Entity<StudentCourse>()
                 .HasOne(stucou => stucou.Student)

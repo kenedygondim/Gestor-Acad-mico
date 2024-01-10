@@ -34,13 +34,13 @@ namespace Gestor_Acadêmico.Models
         [EmailAddress]
         public string EmailAddress { get; set; } = string.Empty;
 
-        public decimal GPA { get; private set; }
+        public decimal? GPA { get; private set; }
 
-        public IEnumerable<StudentCourse> Courses { get; set; }
+        public IEnumerable<StudentCourse>? Courses { get; set; }
 
-        public IEnumerable<StudentSubject> Subjects { get; set; }
+        public IEnumerable<StudentSubject>? Subjects { get; set; }
 
-        public IEnumerable<Grade> Grades { get; set; }
+        public IEnumerable<Grade>? Grades { get; set; }
 
         public void CalcularGPA()
         {

@@ -39,6 +39,19 @@ namespace Gestor_Acadêmico
                 gestorAcademicoContext.CategoriesCourse.AddRange(categories);
                 gestorAcademicoContext.SaveChanges();
             };
+
+
+            if (!gestorAcademicoContext.Courses.Any())
+            {
+                var courses = new List<Course>()
+                    {
+                    new () { CourseName = "Administração", Semesters = 8, TurnId = 1, CategoryCourseId = 3 },
+                };
+
+                gestorAcademicoContext.Courses.AddRange(courses);
+                gestorAcademicoContext.SaveChanges();
+            };
+
         }
     }
 

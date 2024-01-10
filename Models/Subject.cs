@@ -19,14 +19,14 @@ namespace Gestor_Acadêmico.Models
         [Required]
         public int ReferencePeriod { get; set; }
 
-        public int TeacherId { get; set; }
-        public Teacher Teacher { get; set; }
+        public int? TeacherId { get; set; }
+        public Teacher? Teacher { get; set; }
 
-        public int CourseId { get; set; }
-        public Course Course { get; set; }
+        public int? CourseId { get; set; }
+        public Course? Course { get; set; }
 
-        public IEnumerable<StudentSubject> Students { get; set; }
+        public IEnumerable<StudentSubject>? Students { get; set; }
 
-        public Grade Grade { get; set; }
+        public Grade? Grade { get; set; }
     }
 }

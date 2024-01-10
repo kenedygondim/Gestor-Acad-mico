@@ -17,14 +17,14 @@ namespace Gestor_Acadêmico.Models
 
         [Required]
         public int TurnId { get; set; }
-        public Turn Turn { get; set; }
+        public Turn? Turn { get; set; }
 
         [Required]
         public int CategoryCourseId { get; set; }
-        public CategoryCourse CategoryCourse { get; set; }
+        public CategoryCourse? CategoryCourse { get; set; }
 
-        public IEnumerable<Subject> Subjects { get; set; }
-        public IEnumerable<StudentCourse> Students { get; set; }
+        public IEnumerable<Subject>? Subjects { get; set; }
+        public IEnumerable<StudentCourse>? Students { get; set; }
     }
 
 

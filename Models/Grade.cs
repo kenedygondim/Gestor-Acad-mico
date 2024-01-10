@@ -6,7 +6,7 @@ namespace Gestor_Acadêmico.Models
     {
         [Key]
         public int Id { get; set; }
-        public decimal Frequence { get; set; }
+        public decimal? Frequence { get; set; }
 
         [Range(0, 10)]
         public decimal FirstAvaliation { get; set; }
@@ -17,11 +17,11 @@ namespace Gestor_Acadêmico.Models
         [Range(0, 10)]
         public decimal Balance { get; private set; }
 
-        public int StudentId { get; set; }
-        public Student Student { get; set; }
+        public int? StudentId { get; set; }
+        public Student? Student { get; set; }
 
-        public int SubjectId { get; set; }
-        public Subject Subject { get; set; }
+        public int?  SubjectId { get; set; }
+        public Subject? Subject { get; set; }
 
         public void CalculateBalance()
         {

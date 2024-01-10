@@ -2,6 +2,7 @@
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Context;
 using Microsoft.EntityFrameworkCore;
+using Gestor_Acadêmico.Dto;
 
 namespace Gestor_Acadêmico.Repositories
 {
@@ -30,15 +31,15 @@ namespace Gestor_Acadêmico.Repositories
             return await _context.CategoriesCourse.Where(catcou => catcou.Name == categoryName).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> CreateCategory(CategoryCourse categoryCourse)
+        public async Task<bool> CreateCategory(CategoryCourseDto categoryCourse)
         {
-            await _context.AddAsync(categoryCourse);
+            var category = new CategoryCourse { Name =  categoryCourse.Name };  
+            await _context.AddAsync(category);
             return await Save();
         }
 
-        public async Task<bool> DeleteCategory(int categoryId)
+        public async Task<bool> DeleteCategory(CategoryCourse category)
         {
-            var category = GetCategoryCourseById(categoryId);
             _context.Remove(category);
             return await Save();
         }

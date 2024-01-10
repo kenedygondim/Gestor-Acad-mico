@@ -10,6 +10,6 @@ namespace Gestor_Acadêmico.Models
         [Required]
         public string Name { get; set; } = string.Empty;
 
-        public IEnumerable<Course> Courses { get; set; } 
+        public IEnumerable<Course>? Courses { get; set; } 
     }
 }

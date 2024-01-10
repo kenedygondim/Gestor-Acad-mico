@@ -11,8 +11,8 @@ namespace Gestor_Acadêmico.Dto
         public string CourseName { get; set; } = string.Empty;
         [Required]
         public int Semesters { get; set; }
-        public Turn Turn { get; set; }
-        public CategoryCourse CategoryCourse { get; set; }
+        public Turn? Turn { get; set; }
+        public CategoryCourse? CategoryCourse { get; set; }
     }
 }
 
