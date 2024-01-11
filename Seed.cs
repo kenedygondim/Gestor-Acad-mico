@@ -9,48 +9,16 @@ namespace Gestor_Acadêmico
 
         public void SeedDataContext()
         {
-            if (!gestorAcademicoContext.Turns.Any())
+           if(!gestorAcademicoContext.Courses.Any())
             {
-                var turns = new List<Turn>()
-                {
-                    new() { TurnCourse = "Matutino" },
-                    new() { TurnCourse = "Vespertino" },
-                    new() { TurnCourse = "Noturno" },
-                    new() { TurnCourse = "Integral" }
-                 };
+                var courses = new List<Course>() { 
+                    
+                    new() { CourseName = "Tecnologia em Análise e Desenvolvimento de Sistemas", Turn = "Noturno", OpeningsFirstSemester = 80, OpeningsLastSemester = 40 ,Hours = 2369.25m, Semesters = 6, SemesterDurationInWeeks = 19, Mode = "Presencial" ,CategoryCourse = "Tecnólogo" }
+                };
 
-                gestorAcademicoContext.Turns.AddRange(turns);
-                gestorAcademicoContext.SaveChanges();
+                gestorAcademicoContext.AddRange(courses);
+                gestorAcademicoContext.SaveChanges();   
             }
-
-
-            if (!gestorAcademicoContext.CategoriesCourse.Any())
-            {
-                var categories = new List<CategoryCourse>()
-                    {
-                    new () { Name = "Técnologo" },
-                    new () { Name = "Licenciatura" },
-                    new () { Name = "Bacharelado" },
-                    new () { Name = "Técnico" },
-                    new () { Name = "Pós-graduação"},
-                    new () { Name = "Cursos livres"}
-                };
-
-                gestorAcademicoContext.CategoriesCourse.AddRange(categories);
-                gestorAcademicoContext.SaveChanges();
-            };
-
-
-            if (!gestorAcademicoContext.Courses.Any())
-            {
-                var courses = new List<Course>()
-                    {
-                    new () { CourseName = "Administração", Semesters = 8, TurnId = 1, CategoryCourseId = 3 },
-                };
-
-                gestorAcademicoContext.Courses.AddRange(courses);
-                gestorAcademicoContext.SaveChanges();
-            };
 
         }
     }

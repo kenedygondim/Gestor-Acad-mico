@@ -1,9 +1,14 @@
 ﻿using AutoMapper;
 using Gestor_Acadêmico.Dto;
 using Gestor_Acadêmico.Interfaces;
+using Gestor_Acadêmico.Models;
 using Gestor_Acadêmico.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Linq;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Gestor_Acadêmico.Controllers
 {
@@ -29,6 +34,80 @@ namespace Gestor_Acadêmico.Controllers
             {
                 return BadRequest("Não foi possível recuperar a lista de cursos");
             }
+        }
+
+        [HttpGet("{courseId}/id")]
+        [ProducesResponseType(200, Type = typeof(CourseDto))]
+        public async Task<IActionResult> GetCourseById(int courseId)
+        {
+            try
+            {
+                var course = await _courseRepository.GetCourseById(courseId);
+
+                if(course == null)
+                   return NotFound("Curso não encontrado");
+
+
+                var courseDto = _mapper.Map<CourseDto>(course);
+                return Ok(courseDto);
+            }
+            catch
+            {
+                return BadRequest("Não foi possível recuperar o curso solicitado");
+            }
+        }
+
+        [HttpGet("{courseName}")]
+        [ProducesResponseType(200, Type = typeof(CourseDto))]
+        public async Task<IActionResult> GetCourseByName(string courseName)
+        {
+            try
+            {
+                var course = await _courseRepository.GetCourseByName(courseName);
+
+                if (course == null)
+                    return NotFound("Curso não encontrado");
+
+                var courseDto = _mapper.Map<CourseDto>(course);
+                return Ok(courseDto);
+            }
+            catch
+            {
+                return BadRequest("Não foi possível recuperar o curso solicitado");
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200, Type = typeof(CourseDto))]
+        public async Task<IActionResult> CreateCourse (Course course)
+        {
+            string[] turnos = [ "Matutino", "Vespertino", "Noturno", "Integral"];
+            string[] categorias = [ "Tecnólogo", "Bacharelado", "Licenciatura", "Pós-graduação", "Cursos livres"];
+            string[] modalidades = ["Presencial", "EAD", "Híbrido"];
+
+            try
+            {
+                if(course == null || !ModelState.IsValid)
+                    return BadRequest ("Insira os dados corretamente");
+
+                if(!turnos.Contains(course.Turn, StringComparer.OrdinalIgnoreCase))
+                    return BadRequest("Insira um turno válido: 'Matutino', 'Vespertino', 'Nortuno' ou 'Integral'");
+
+                if (!categorias.Contains(course.CategoryCourse, StringComparer.OrdinalIgnoreCase))
+                    return BadRequest("Insira uma categoria válida: 'Tecnólogo', 'Bacharelado', 'Licenciatura', 'Pós-graduação' ou 'Cursos livres'");
+
+                if (!categorias.Contains(course.Mode, StringComparer.OrdinalIgnoreCase))
+                    return BadRequest("Insira uma modalidade válida: 'Presencial', 'EAD', 'Híbrido'");
+
+                await _courseRepository.CreateCourse(course);
+                
+                return Ok(course);
+            }
+            catch 
+            {
+                return BadRequest("Não foi possível criar o curso solicitado");
+            }
+
         }
 
     }

@@ -4,6 +4,7 @@ using Gestor_Acadêmico.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gestor_Acadêmico.Migrations
 {
     [DbContext(typeof(GestorAcademicoContext))]
-    partial class GestorAcademicoContextModelSnapshot : ModelSnapshot
+    [Migration("20240110211841_RemovingSomeTables")]
+    partial class RemovingSomeTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,29 +33,13 @@ namespace Gestor_Acadêmico.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CategoryCourse")
+                    b.Property<string>("CategoryCourseId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CourseName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Hours")
-                        .HasColumnType("decimal(8,1)");
-
-                    b.Property<string>("Mode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OpeningsFirstSemester")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OpeningsLastSemester")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SemesterDurationInWeeks")
-                        .HasColumnType("int");
 
                     b.Property<int>("Semesters")
                         .HasColumnType("int");
@@ -195,8 +182,8 @@ namespace Gestor_Acadêmico.Migrations
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Hours")
-                        .HasColumnType("decimal(8,1)");
+                    b.Property<int>("Hours")
+                        .HasColumnType("int");
 
                     b.Property<int>("ReferencePeriod")
                         .HasColumnType("int");

@@ -16,12 +16,25 @@ namespace Gestor_Acadêmico.Models
         public int Semesters {  get; set; }
 
         [Required]
-        public int TurnId { get; set; }
-        public Turn? Turn { get; set; }
+        public int OpeningsFirstSemester { get; set; }
 
         [Required]
-        public int CategoryCourseId { get; set; }
-        public CategoryCourse? CategoryCourse { get; set; }
+        public int OpeningsLastSemester { get; set; }
+
+        [Required]
+        public int SemesterDurationInWeeks { get; set; }
+
+        [Required]
+        public string Mode { get; set; } = string.Empty;
+
+        [Required]
+        public string Turn { get; set; } = string.Empty;
+
+        [Required]
+        public string CategoryCourse { get; set; } = string.Empty;
+
+        [Required]
+        public decimal Hours {  get; set; }
 
         public IEnumerable<Subject>? Subjects { get; set; }
         public IEnumerable<StudentCourse>? Students { get; set; }

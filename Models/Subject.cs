@@ -11,7 +11,7 @@ namespace Gestor_Acadêmico.Models
         public string SubjectName { get; set; } = string.Empty;
 
         [Required]
-        public int Hours { get; set; }
+        public decimal Hours { get; set; }
 
         [Required]
         public int Classes { get; set; }

@@ -12,13 +12,11 @@ namespace Gestor_Acadêmico.Context
 
         public DbSet<Student> Students { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<CategoryCourse> CategoriesCourse { get; set; }
         public DbSet<StudentCourse> StudentCourses { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<StudentSubject> StudentSubjects { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<Turn> Turns { get; set; }
     
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,8 +42,16 @@ namespace Gestor_Acadêmico.Context
             .HasColumnType("decimal(4,2)");
 
             modelBuilder.Entity<Student>()
-            .Property(g => g.GPA)
+            .Property(s => s.GPA)
             .HasColumnType("decimal(4,2)");
+
+            modelBuilder.Entity<Course>()
+            .Property(c => c.Hours)
+            .HasColumnType("decimal(8,1)");
+
+            modelBuilder.Entity<Subject>()
+            .Property(g => g.Hours)
+            .HasColumnType("decimal(8,1)");
 
 
 
@@ -77,22 +83,6 @@ namespace Gestor_Acadêmico.Context
                 .WithOne(gra => gra.Subject)
                 .HasForeignKey<Grade>(gra => gra.SubjectId);
                 
-
-
-            modelBuilder.Entity<Course>()
-                .HasOne(cou => cou.CategoryCourse)
-                .WithMany(cat => cat.Courses)
-                .HasForeignKey(cou => cou.CategoryCourseId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.NoAction);
-            
-
-        modelBuilder.Entity<Course>()
-                .HasOne(cou => cou.Turn)
-                .WithMany(tur => tur.Courses)
-                .HasForeignKey(cou => cou.TurnId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Course>()
                 .HasMany(cou => cou.Subjects)
