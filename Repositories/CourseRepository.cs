@@ -17,13 +17,13 @@ namespace Gestor_Acadêmico.Repositories
 
         public async Task<bool> CreateCourse(Course course)
         {
+ 
             await _context.AddAsync(course);
             return await Save();
         }
 
-        public async Task<bool> DeleteCourse(int courseId)
+        public async Task<bool> DeleteCourse(Course course)
         {
-            var course = GetCourseById(courseId);
             _context.Remove(course);
             return await Save();
         }

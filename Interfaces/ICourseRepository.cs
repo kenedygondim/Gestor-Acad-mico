@@ -9,8 +9,11 @@ namespace Gestor_Acadêmico.Interfaces
         Task<Course> GetCourseById(int courseId);
         Task<Course> GetCourseByName(string courseName);
         Task<bool> CreateCourse(Course course);
+
+
+
         Task<bool> UpdateCourse(Course course);   
-        Task<bool> DeleteCourse(int courseId);
+        Task<bool> DeleteCourse(Course course);
         Task<bool> Save();
     }
 }

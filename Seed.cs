@@ -20,6 +20,17 @@ namespace Gestor_Acadêmico
                 gestorAcademicoContext.SaveChanges();   
             }
 
+            if (!gestorAcademicoContext.Students.Any())
+            {
+                var students = new List<Student>() {
+
+                    new() { FullName = "João Gomes da Silva Neto", Status = "Matrículado", Address = "Rua das Palmeiras, Itaquera - SP", Cpf = "92624654564" , Genre = "Masculino", EmailAddress = "joaogomes@gmail.com", BirthDate = "11/11/2000" }
+                };
+
+                gestorAcademicoContext.AddRange(students);
+                gestorAcademicoContext.SaveChanges();
+            }
+
         }
     }
 

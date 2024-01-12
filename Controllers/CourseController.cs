@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Identity.Client;
 using System.Linq;
+using System.Text.Json;
 using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Gestor_Acadêmico.Controllers
@@ -19,6 +21,9 @@ namespace Gestor_Acadêmico.Controllers
         private readonly ICourseRepository _courseRepository = courseRepository;
         private readonly IMapper _mapper = mapper;
 
+        readonly string[] turnos = ["Matutino", "Vespertino", "Noturno", "Integral"];
+        readonly string[] categorias = ["Tecnólogo", "Bacharelado", "Licenciatura", "Pós-graduação", "Cursos livres"];
+        readonly string[] modalidades = ["Presencial", "EAD", "Híbrido"];
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<CourseDto>))]
@@ -81,10 +86,6 @@ namespace Gestor_Acadêmico.Controllers
         [ProducesResponseType(200, Type = typeof(CourseDto))]
         public async Task<IActionResult> CreateCourse (Course course)
         {
-            string[] turnos = [ "Matutino", "Vespertino", "Noturno", "Integral"];
-            string[] categorias = [ "Tecnólogo", "Bacharelado", "Licenciatura", "Pós-graduação", "Cursos livres"];
-            string[] modalidades = ["Presencial", "EAD", "Híbrido"];
-
             try
             {
                 if(course == null || !ModelState.IsValid)
@@ -96,19 +97,81 @@ namespace Gestor_Acadêmico.Controllers
                 if (!categorias.Contains(course.CategoryCourse, StringComparer.OrdinalIgnoreCase))
                     return BadRequest("Insira uma categoria válida: 'Tecnólogo', 'Bacharelado', 'Licenciatura', 'Pós-graduação' ou 'Cursos livres'");
 
-                if (!categorias.Contains(course.Mode, StringComparer.OrdinalIgnoreCase))
+                if (!modalidades.Contains(course.Mode, StringComparer.OrdinalIgnoreCase))
                     return BadRequest("Insira uma modalidade válida: 'Presencial', 'EAD', 'Híbrido'");
 
                 await _courseRepository.CreateCourse(course);
-                
-                return Ok(course);
+
+                var courseDto = _mapper.Map<CourseDto>(course);
+
+                return Ok(courseDto);
             }
             catch 
             {
                 return BadRequest("Não foi possível criar o curso solicitado");
             }
-
         }
+
+        
+
+        [HttpPut("{courseId}/update")]
+        public async Task<IActionResult> UpdateCourse([FromRoute] int courseId, [FromBody] Course courseUpdated)
+        { 
+            try
+            {
+                var course = await _courseRepository.GetCourseById(courseId);
+
+                if (course == null)
+                    return NotFound("Curso inexistente");
+
+                if (!ModelState.IsValid) 
+                    return BadRequest("Reveja os dados inseridos");
+
+                if (course.Id != courseUpdated.Id)
+                    return BadRequest("Ocorreu um erro na validação dos identificadores.");
+
+                if(!turnos.Contains(courseUpdated.Turn, StringComparer.OrdinalIgnoreCase))
+                    return BadRequest("Insira um turno válido: 'Matutino', 'Vespertino', 'Nortuno' ou 'Integral'");
+
+                if (!categorias.Contains(courseUpdated.CategoryCourse, StringComparer.OrdinalIgnoreCase))
+                    return BadRequest("Insira uma categoria válida: 'Tecnólogo', 'Bacharelado', 'Licenciatura', 'Pós-graduação' ou 'Cursos livres'");
+
+                if (!modalidades.Contains(courseUpdated.Mode, StringComparer.OrdinalIgnoreCase))
+                    return BadRequest("Insira uma modalidade válida: 'Presencial', 'EAD', 'Híbrido'");
+
+                await _courseRepository.UpdateCourse(course);
+
+                var courseDto = _mapper.Map<CourseDto>(course);
+
+                return Ok("Curso alterado com sucesso!");
+            }
+
+            catch
+            {
+                return BadRequest("Não foi possível editar a categoria");
+            }
+        }
+
+
+        [HttpDelete("{courseId}/delete")]
+        public async Task<IActionResult> DeleteCourse([FromRoute] int courseId)
+        {
+            try
+            {
+                var course = await _courseRepository.GetCourseById(courseId);
+
+                if (course == null)
+                    return NotFound("Curso inexistente");
+
+                await _courseRepository.DeleteCourse(course);
+                return Ok("Curso excluído!");
+            }
+            catch
+            {
+                return BadRequest("Não foi possível excluir a categoria");
+            }
+        }
+
 
     }
 }
