@@ -8,11 +8,11 @@ namespace ASPDotnetFC.Helper
     {
         public MappingProfiles()
         {
-            CreateMap<Course, CourseDto>().ReverseMap();
-            CreateMap<Grade, GradeDto>().ReverseMap();
-            CreateMap<Student, StudentDto>().ReverseMap();
-            CreateMap<Subject, SubjectDto>().ReverseMap();
-            CreateMap<Teacher,TeacherDto >().ReverseMap();
+            CreateMap<Curso, CursoDto>().ReverseMap();
+            CreateMap<Nota, NotaDto>().ReverseMap();
+            CreateMap<Aluno, AlunoDto>().ReverseMap();
+            CreateMap<Disciplina, DisciplinaDto>().ReverseMap();
+            CreateMap<Professor,ProfessorDto >().ReverseMap();
         }
     }
 }

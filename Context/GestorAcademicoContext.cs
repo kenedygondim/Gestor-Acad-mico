@@ -10,98 +10,115 @@ namespace Gestor_Acadêmico.Context
             
         }
 
-        public DbSet<Student> Students { get; set; }
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<StudentCourse> StudentCourses { get; set; }
-        public DbSet<Subject> Subjects { get; set; }
-        public DbSet<StudentSubject> StudentSubjects { get; set; }
-        public DbSet<Grade> Grades { get; set; }
-        public DbSet<Teacher> Teachers { get; set; }
+        public override int SaveChanges()
+        {
+            foreach (var entry in ChangeTracker.Entries<Nota>())
+            {
+                if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+                {
+                    var nota = entry.Entity;
+
+                    nota.MediaGeral = (nota.PrimeiraAvaliacao  + nota.SegundaAvaliacao + nota.Atividades) / 3;
+
+                    nota.Aprovado = nota.MediaGeral >= 6;
+                }
+            }
+
+            return base.SaveChanges();
+        }
+
+        public DbSet<Aluno> Alunos { get; set; }
+        public DbSet<Curso> Cursos { get; set; }
+        public DbSet<AlunoCurso> AlunoCursos { get; set; }
+        public DbSet<Disciplina> Disciplinas { get; set; }
+        public DbSet<AlunoDisciplina> AlunoDisciplinas { get; set; }
+        public DbSet<Nota> Notas { get; set; }
+        public DbSet<Professor> Professores { get; set; }
     
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-            modelBuilder.Entity<Grade>()
-            .Property(g => g.Activities)
+            modelBuilder.Entity<Nota>()
+            .Property(not => not.Atividades)
             .HasColumnType("decimal(4,2)");
 
-            modelBuilder.Entity<Grade>()
-            .Property(g => g.FirstAvaliation)
+            modelBuilder.Entity<Nota>()
+            .Property(not => not.PrimeiraAvaliacao)
             .HasColumnType("decimal(4,2)");
 
-            modelBuilder.Entity<Grade>()
-            .Property(g => g.SecondAvaliation)
+            modelBuilder.Entity<Nota>()
+            .Property(not => not.SegundaAvaliacao)
             .HasColumnType("decimal(4,2)");
 
-            modelBuilder.Entity<Grade>()
-            .Property(g => g.Balance)
+            modelBuilder.Entity<Nota>()
+            .Property(not => not.MediaGeral)
             .HasColumnType("decimal(4,2)");
 
-            modelBuilder.Entity<Grade>()
-            .Property(g => g.Frequence)
+            modelBuilder.Entity<Nota>()
+            .Property(not => not.Frequencia)
             .HasColumnType("decimal(4,2)");
 
-            modelBuilder.Entity<Student>()
-            .Property(s => s.GPA)
+            modelBuilder.Entity<Aluno>()
+            .Property(alu => alu.IRA)
             .HasColumnType("decimal(4,2)");
 
-            modelBuilder.Entity<Course>()
-            .Property(c => c.Hours)
+            modelBuilder.Entity<Curso>()
+            .Property(cur => cur.CargaHoraria)
             .HasColumnType("decimal(8,1)");
 
-            modelBuilder.Entity<Subject>()
-            .Property(g => g.Hours)
+            modelBuilder.Entity<Disciplina>()
+            .Property(dis => dis.CargaHoraria)
             .HasColumnType("decimal(8,1)");
 
 
 
-            modelBuilder.Entity<StudentCourse>().HasKey(stucou => new { stucou.StudentId, stucou.CourseId });
-            modelBuilder.Entity<StudentCourse>()
-                .HasOne(stucou => stucou.Student)
-                .WithMany(stu => stu.Courses)
-                .HasForeignKey(stucou => stucou.StudentId);
-            modelBuilder.Entity<StudentCourse>()
-                .HasOne(stucou => stucou.Course)
-                .WithMany(cou => cou.Students)
-                .HasForeignKey(stucou => stucou.CourseId);
+            modelBuilder.Entity<AlunoCurso>().HasKey(alucur => new { alucur.AlunoId, alucur.CursoId });
+            modelBuilder.Entity<AlunoCurso>()
+                .HasOne(alucur => alucur.Aluno)
+                .WithMany(alu => alu.Cursos)
+                .HasForeignKey(alucur => alucur.AlunoId);
+            modelBuilder.Entity<AlunoCurso>()
+                .HasOne(alucur => alucur.Curso)
+                .WithMany(cur => cur.Alunos)
+                .HasForeignKey(alucur => alucur.CursoId);
 
 
-            modelBuilder.Entity<StudentSubject>().HasKey(stusub => new { stusub.StudentId, stusub.SubjectId });
-            modelBuilder.Entity<StudentSubject>()
-                .HasOne(stusub => stusub.Student)
-                .WithMany(stu => stu.Subjects)
-                .HasForeignKey(stusub => stusub.StudentId);
-            modelBuilder.Entity<StudentSubject>()
-                .HasOne(stusub => stusub.Subject)
-                .WithMany(sub => sub.Students)
-                .HasForeignKey(stusub => stusub.SubjectId);
+            modelBuilder.Entity<AlunoDisciplina>().HasKey(aludis => new { aludis.AlunoId, aludis.DisciplinaId });
+            modelBuilder.Entity<AlunoDisciplina>()
+                .HasOne(aludis => aludis.Aluno)
+                .WithMany(alu => alu.Disciplinas)
+                .HasForeignKey(aludis => aludis.AlunoId);
+            modelBuilder.Entity<AlunoDisciplina>()
+                .HasOne(aludis => aludis.Disciplina)
+                .WithMany(dis => dis.Alunos)
+                .HasForeignKey(aludis => aludis.DisciplinaId);
 
             
 
-            modelBuilder.Entity<Subject>()
-                .HasOne(sub => sub.Grade)
-                .WithOne(gra => gra.Subject)
-                .HasForeignKey<Grade>(gra => gra.SubjectId);
+            modelBuilder.Entity<Disciplina>()
+                .HasOne(dis => dis.Nota)
+                .WithOne(not => not.Disciplina)
+                .HasForeignKey<Nota>(not => not.DisciplinaId);
                 
 
-            modelBuilder.Entity<Course>()
-                .HasMany(cou => cou.Subjects)
-                .WithOne(sub => sub.Course)
-                .HasForeignKey(sub => sub.CourseId)
+            modelBuilder.Entity<Curso>()
+                .HasMany(cur => cur.Disciplinas)
+                .WithOne(dis => dis.Curso)
+                .HasForeignKey(dis => dis.CursoId)
                 .OnDelete(DeleteBehavior.SetNull);
 
 
-            modelBuilder.Entity<Subject>()
-                .HasOne(sub => sub.Teacher)
-                .WithMany(tea => tea.Subjects)
-                .HasForeignKey(sub => sub.TeacherId)
+            modelBuilder.Entity<Disciplina>()
+                .HasOne(dis => dis.Professor)
+                .WithMany(pro => pro.Disciplinas)
+                .HasForeignKey(dis => dis.ProfessorId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             
-            modelBuilder.Entity<Student>()
-                .HasMany(stu => stu.Grades)
-                .WithOne(gra => gra.Student)
-                .HasForeignKey(gra => gra.StudentId)
+            modelBuilder.Entity<Aluno>()
+                .HasMany(alu => alu.Notas)
+                .WithOne(not => not.Aluno)
+                .HasForeignKey(not => not.AlunoId)
                 .OnDelete(DeleteBehavior.Cascade);
     } 
 }
