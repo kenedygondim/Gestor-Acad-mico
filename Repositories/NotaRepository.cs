@@ -8,7 +8,7 @@ namespace Gestor_Acadêmico.Repositories
 {
     public class NotaRepository : INotaRepository
     {
-        private readonly GestorAcademicoContext _context;
+        private readonly GestorAcademicoContext _context; 
 
         public NotaRepository(GestorAcademicoContext context)
         {
@@ -18,7 +18,7 @@ namespace Gestor_Acadêmico.Repositories
 
         public async Task<bool> CriarNota(Nota nota)
         {
-            Nota teste = new()
+            Nota notaFix = new()
             {
                 Frequencia = nota.Frequencia,
                 PrimeiraAvaliacao = nota.PrimeiraAvaliacao,
@@ -28,13 +28,10 @@ namespace Gestor_Acadêmico.Repositories
                 MediaGeral = (nota.PrimeiraAvaliacao + nota.SegundaAvaliacao + nota.Atividades) / 3,
                 AlunoId = nota.AlunoId,
                 DisciplinaId = nota.DisciplinaId,
-                Aprovado = ((nota.PrimeiraAvaliacao + nota.SegundaAvaliacao + nota.Atividades) / 3) > 6
+                Aprovado = ((nota.PrimeiraAvaliacao + nota.SegundaAvaliacao + nota.Atividades) / 3) > 6 && nota.Frequencia > 75 && nota.NotasFechadas == true
             }; 
 
-            
-
-
-            await _context.AddAsync(teste);
+            await _context.AddAsync(notaFix);
             return await Save();
         }
 

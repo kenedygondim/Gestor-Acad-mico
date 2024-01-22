@@ -6,6 +6,6 @@ namespace Gestor_Acadêmico.Dto
     public class AlunoDto : Pessoa
     {
         public required string StatusDoAluno { get; set; } 
-        public decimal? IRA { get; private set; }
+        public decimal? IRA { get; set; }
     }
 }

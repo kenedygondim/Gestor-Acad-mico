@@ -24,7 +24,7 @@ namespace Gestor_Acadêmico.Repositories {
 
         public async Task<Aluno> GetAlunoPeloId(int alunoId)
         {
-            return await _context.Alunos.Where(alu => alu.Id == alunoId).FirstOrDefaultAsync();
+            return await _context.Alunos.Where(alu => alu.Id == alunoId).Include(alu => alu.Notas).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Aluno>> GetAlunoPeloNome(string nomeDoAluno)
@@ -50,8 +50,21 @@ namespace Gestor_Acadêmico.Repositories {
 
         public async Task<bool> AtualizarAluno(Aluno aluno)
         {
+            var alunoFix = await GetAlunoPeloId(aluno.Id);
+
+            if (alunoFix.Notas.Any())
+            {
+                aluno.IRA = alunoFix.Notas.Sum(not => not.MediaGeral) / alunoFix.Notas.Count();
+            }
+            else
+            {
+                aluno.IRA = 0;
+            }
+
             _context.Update(aluno);
             return await Save();
         }
+
+
     }
 }

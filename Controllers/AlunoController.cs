@@ -154,9 +154,9 @@ namespace Gestor_Acadêmico.Controllers
                 return Ok("Informações alteradas com sucesso!");
             }
 
-            catch
+            catch (Exception ex) 
             {
-                return BadRequest("Não foi possível editar o aluno");
+                return BadRequest("Não foi possível editar o aluno. " + ex.Message);
             }
         }
 

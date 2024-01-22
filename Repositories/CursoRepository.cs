@@ -12,19 +12,17 @@ namespace Gestor_Acadêmico.Repositories
         public CursoRepository(GestorAcademicoContext context)
         {
             _context = context;
-            _context.Database.EnsureCreated();
         }
 
         public async Task<bool> CriarCurso(Curso curso)
         {
- 
             await _context.AddAsync(curso);
             return await Save();
         }
 
         public async Task<Curso> GetCursoPeloId(int cursoId)
         {
-            return await _context.Cursos.Where(cur => cur.Id == cursoId).FirstOrDefaultAsync();
+            return await _context.Cursos.FirstOrDefaultAsync(cur => cur.Id == cursoId);
         }
 
         public async Task<IEnumerable<Curso>> GetCursoPeloNome(string nomeDoCurso)

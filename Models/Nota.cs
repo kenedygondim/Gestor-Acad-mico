@@ -10,7 +10,8 @@ namespace Gestor_Acadêmico.Models
         public int Id { get; set; }
 
         [Range(0, 100)]
-        public decimal? Frequencia { get; set; }
+        [DefaultValue(100)]
+        public decimal Frequencia { get; set; }
 
         [Range(0, 10)]
         [DefaultValue(0)]
@@ -35,15 +36,8 @@ namespace Gestor_Acadêmico.Models
 
         [Range(0, 10)]
         public decimal MediaGeral {  get; set; }
+
+        [DefaultValue(false)]
         public bool? Aprovado {  get; set;}
-
-        public bool FoiAprovado()
-        {
-            return MediaGeral > 6;
-        }
-
-
-        
-
     }
 }

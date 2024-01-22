@@ -12,7 +12,9 @@ namespace Gestor_Acadêmico.Models
 
         [Length(5, 7)]
         //Exemplo: SPOMATI, SPOENG1
-        public required string CodigoDaDisciplina { get; set; } 
+        public required string CodigoDaDisciplina { get; set; }
+
+        [Range(1, 100)]
         public required decimal CargaHoraria { get; set; }
 
         [Range(1, 10)]

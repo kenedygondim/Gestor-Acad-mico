@@ -3,13 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gestor_Acadêmico.Context
 {
-    public class GestorAcademicoContext : DbContext
+    public class GestorAcademicoContext(DbContextOptions<GestorAcademicoContext> options) : DbContext(options)
     {
-        public GestorAcademicoContext(DbContextOptions<GestorAcademicoContext> options) : base(options) 
-        {
-            
-        }
-
         public override int SaveChanges()
         {
             foreach (var entry in ChangeTracker.Entries<Nota>())
@@ -69,6 +64,29 @@ namespace Gestor_Acadêmico.Context
             modelBuilder.Entity<Disciplina>()
             .Property(dis => dis.CargaHoraria)
             .HasColumnType("decimal(8,1)");
+
+
+
+            modelBuilder.Entity<Aluno>()
+                .HasIndex(alu => alu.Cpf)
+                .IsUnique();
+
+            modelBuilder.Entity<Aluno>()
+                .HasIndex(alu => alu.EnderecoDeEmail)
+                .IsUnique();
+
+            modelBuilder.Entity<Professor>()
+                .HasIndex(pro => pro.Cpf)
+                .IsUnique();
+
+            modelBuilder.Entity<Professor>()
+                .HasIndex(pro => pro.EnderecoDeEmail)
+                .IsUnique();
+
+            modelBuilder.Entity<Curso>()
+                .HasIndex(cur => cur.NomeDoCurso)
+                .IsUnique();
+
 
 
 

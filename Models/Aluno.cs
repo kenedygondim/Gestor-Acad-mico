@@ -8,31 +8,10 @@ namespace Gestor_Acadêmico.Models
     {
         //Exemplo: Matriculado, Desistente
         public required string StatusDoAluno { get; set; }
-
-        private decimal _ira;
-        public decimal? IRA { 
-            get => _ira;
-            set {
-                if (Notas != null && Notas.Any())
-                {
-                    decimal somaNotas = Notas.Sum(g => g.MediaGeral);
-                    decimal mediaNotas = somaNotas / Notas.Count();
-
-                    _ira = mediaNotas;
-                    
-                    return;
-                }
-
-                _ira = 0;
-            } 
-        }
-        public IEnumerable<AlunoCurso>? Cursos { get; set; }
-
+        public decimal? IRA { get; set; }
+        public required int CursoId { get; set; }
+        public Curso? Curso { get; set; }
         public IEnumerable<AlunoDisciplina>? Disciplinas { get; set; }
-
         public IEnumerable<Nota>? Notas { get; set; }
-
-
-        
     }
 }
