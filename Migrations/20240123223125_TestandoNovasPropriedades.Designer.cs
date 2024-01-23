@@ -4,6 +4,7 @@ using Gestor_Acadêmico.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gestor_Acadêmico.Migrations
 {
     [DbContext(typeof(GestorAcademicoContext))]
-    partial class GestorAcademicoContextModelSnapshot : ModelSnapshot
+    [Migration("20240123223125_TestandoNovasPropriedades")]
+    partial class TestandoNovasPropriedades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace Gestor_Acadêmico.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("CursoId")
+                    b.Property<int>("CursoId")
                         .HasColumnType("int");
 
                     b.Property<string>("DataDeNascimento")
@@ -306,7 +309,8 @@ namespace Gestor_Acadêmico.Migrations
                     b.HasOne("Gestor_Acadêmico.Models.Curso", "Curso")
                         .WithMany("Alunos")
                         .HasForeignKey("CursoId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("Curso");
                 });

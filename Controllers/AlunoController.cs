@@ -16,7 +16,7 @@ namespace Gestor_Acadêmico.Controllers
         private readonly IAlunoRepository _alunoRepository = alunoRepository;
         private readonly IMapper _mapper = mapper;
 
-        readonly string[] status = ["Matrículado", "Trancado", "Formado", "Desistente", "Afastado"];
+        readonly string[] status = ["Matriculado", "Trancado", "Formado", "Desistente", "Afastado"];
         readonly string[] generos = ["Masculino", "Feminino", "Outros"];
 
         [HttpGet]

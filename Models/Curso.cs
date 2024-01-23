@@ -36,7 +36,7 @@ namespace Gestor_Acadêmico.Models
         public required decimal CargaHoraria {  get; set; }
 
         public IEnumerable<Disciplina>? Disciplinas { get; set; }
-        public IEnumerable<AlunoCurso>? Alunos { get; set; }
+        public IEnumerable<Aluno>? Alunos { get; set; }
     }
 
 

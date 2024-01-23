@@ -2,6 +2,7 @@
 using Gestor_Acadêmico.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Gestor_Acadêmico.Context;
+using System;
 
 namespace Gestor_Acadêmico.Repositories {
 
@@ -18,7 +19,31 @@ namespace Gestor_Acadêmico.Repositories {
 
         public async Task<bool> CriarAluno(Aluno aluno)
         {
-            await _context.AddAsync(aluno);
+
+            Random random = new ();
+            int anoAtual = DateTime.Now.Year;
+            int mesAtual = DateTime.Now.Month;
+            int semestreAtual = (mesAtual <= 6) ? 1 : 2;
+
+
+        Aluno alunoCriado = new() 
+            {
+                StatusDoAluno = aluno.StatusDoAluno,
+                Matricula = $"SP{random.Next(1000000, 10000000)}",
+                CursoId = aluno.CursoId,
+                PeriodoDeIngresso = $"{anoAtual}.{semestreAtual}",  
+                PrimeiroNome = aluno.PrimeiroNome,
+                Sobrenome = aluno.Sobrenome,
+                NomeCompleto = $"{aluno.PrimeiroNome} {aluno.Sobrenome}",
+                Cpf = aluno.Cpf,
+                Genero = aluno.Genero,
+                NumeroDeTelefone = aluno.NumeroDeTelefone,
+                EnderecoDeEmail = aluno.EnderecoDeEmail,
+                DataDeNascimento = aluno.DataDeNascimento,  
+                Endereco = aluno.Endereco,  
+            };
+
+            await _context.AddAsync(alunoCriado);
             return await Save();
         }
 

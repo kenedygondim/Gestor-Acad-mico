@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Gestor Acadêmico")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b160e39d50b128f8451669d152183d86bdb0c0af")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2093e542c4eebee07570ef580ece786b732ea05e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Gestor Acadêmico")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Gestor Acadêmico")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

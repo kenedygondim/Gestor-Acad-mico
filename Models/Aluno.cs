@@ -9,7 +9,9 @@ namespace Gestor_Acadêmico.Models
         //Exemplo: Matriculado, Desistente
         public required string StatusDoAluno { get; set; }
         public decimal? IRA { get; set; }
-        public required int CursoId { get; set; }
+        public required int? CursoId { get; set; }
+        public string? Matricula { get ; set ; }
+        public string? PeriodoDeIngresso { get ; set; }
         public Curso? Curso { get; set; }
         public IEnumerable<AlunoDisciplina>? Disciplinas { get; set; }
         public IEnumerable<Nota>? Notas { get; set; }
