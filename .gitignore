@@ -1,2 +1,6 @@
 ﻿.vs/
+appsettings.json
+appsettings.Development.json
 .Migrations/
+.obj/
+Seed.cs
