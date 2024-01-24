@@ -1,7 +1,4 @@
-﻿using Gestor_Acadêmico.Context;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-
+﻿
 namespace Gestor_Acadêmico.Models
 {
     public class Aluno : Pessoa

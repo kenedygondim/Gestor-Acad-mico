@@ -2,10 +2,7 @@
 using Gestor_Acadêmico.Dto;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Models;
-using Gestor_Acadêmico.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol.Core.Types;
 
 namespace Gestor_Acadêmico.Controllers
 {
@@ -21,11 +18,11 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ProfessorDto>))]
-        public async Task<IActionResult> GetProfessores()
+        public async Task<IActionResult> ObterProfessores()
         {
             try
             {
-                var professores = await _professorRepository.GetProfessores();
+                var professores = await _professorRepository.ObterProfessores();
                 var professorsDto = _mapper.Map<List<ProfessorDto>>(professores);
                 return Ok(professorsDto);
             }
@@ -37,11 +34,11 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{professorId}/id")]
         [ProducesResponseType(200, Type = typeof(ProfessorDto))]
-        public async Task<IActionResult> GetProfessorPeloId(int professorId)
+        public async Task<IActionResult> ObterProfessorPeloId(int professorId)
         {
             try
             {
-                var professor = await _professorRepository.GetProfessorPeloId(professorId);
+                var professor = await _professorRepository.ObterProfessorPeloId(professorId);
 
                 if (professor == null)
                     return NotFound("Professor não encontrado");
@@ -58,11 +55,11 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{nomeDoProfessor}")]
         [ProducesResponseType(200, Type = typeof(ProfessorDto))]
-        public async Task<IActionResult> GetProfessorPeloNome(string nomeDoProfessor)
+        public async Task<IActionResult> ObterProfessorPeloNome(string nomeDoProfessor)
         {
             try
             {
-                var professor = await _professorRepository.GetProfessorPeloNome(nomeDoProfessor);
+                var professor = await _professorRepository.ObterProfessorPeloNome(nomeDoProfessor);
 
                 if (professor == null)
                     return NotFound("Professor não encontrado");
@@ -108,7 +105,7 @@ namespace Gestor_Acadêmico.Controllers
         {
             try
             {
-                var professor = await _professorRepository.GetProfessorPeloId(professorId);
+                var professor = await _professorRepository.ObterProfessorPeloId(professorId);
 
                 if (professor == null)
                     return NotFound("Professor inexistente");
@@ -135,7 +132,7 @@ namespace Gestor_Acadêmico.Controllers
         {
             try
             {
-                var professor = await _professorRepository.GetProfessorPeloId(professorId);
+                var professor = await _professorRepository.ObterProfessorPeloId(professorId);
 
                 if (professor == null)
                     return NotFound("Professor inexistente");

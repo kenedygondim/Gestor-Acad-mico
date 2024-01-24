@@ -1,15 +1,14 @@
-﻿using Gestor_Acadêmico.Dto;
-using Gestor_Acadêmico.Models;
+﻿using Gestor_Acadêmico.Models;
 
 namespace Gestor_Acadêmico.Interfaces
 {
     public interface IDisciplinaRepository
     {
-        Task<IEnumerable<Disciplina>> GetDisciplinas();
-        Task<IEnumerable<Disciplina>> GetDisciplinasDoCurso(int? cursoId);
-        Task<IEnumerable<Disciplina>> GetDisciplinasDoProfessor(int professorId);
-        Task<Disciplina> GetDisciplinaPeloId(int disciplinaId);
-        Task<IEnumerable<Disciplina>> GetDisciplinaPeloNome(string nomeDaDisciplina);
+        Task<IEnumerable<Disciplina>> ObterDisciplinas();
+        Task<IEnumerable<Disciplina>> ObterDisciplinasDoCurso(int? cursoId);
+        Task<IEnumerable<Disciplina>> ObterDisciplinasDoProfessor(int professorId);
+        Task<Disciplina> ObterDisciplinaPeloId(int disciplinaId);
+        Task<IEnumerable<Disciplina>> ObterDisciplinaPeloNome(string nomeDaDisciplina);
         Task<bool> CriarDisciplina(Disciplina disciplina);
         Task<bool> AtualizarDisciplina(Disciplina disciplina);
         Task<bool> Save();

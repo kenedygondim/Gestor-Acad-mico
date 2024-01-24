@@ -2,10 +2,8 @@
 using Gestor_Acadêmico.Dto;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Models;
-using Gestor_Acadêmico.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol.Core.Types;
+
 
 namespace Gestor_Acadêmico.Controllers
 {
@@ -18,11 +16,11 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<DisciplinaDto>))]
-        public async Task<IActionResult> GetDisciplinas()
+        public async Task<IActionResult> ObterDisciplinas()
         {
             try
             {
-                var disciplinas = await _disciplinaRepository.GetDisciplinas();
+                var disciplinas = await _disciplinaRepository.ObterDisciplinas();
                 var disciplinasDto = _mapper.Map<List<DisciplinaDto>>(disciplinas);
                 return Ok(disciplinasDto);
             }
@@ -34,11 +32,11 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{cursoId}/curso/disciplinas")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<DisciplinaDto>))]
-        public async Task<IActionResult> GetDisciplinasDoCurso([FromRoute] int cursoId)
+        public async Task<IActionResult> ObterDisciplinasDoCurso([FromRoute] int cursoId)
         {
             try
             {
-                var disciplinas = await _disciplinaRepository.GetDisciplinasDoCurso(cursoId);
+                var disciplinas = await _disciplinaRepository.ObterDisciplinasDoCurso(cursoId);
                 var disciplinasDto = _mapper.Map<List<DisciplinaDto>>(disciplinas);
                 return Ok(disciplinasDto);
             }
@@ -50,11 +48,11 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{professorId}/professor/disciplinas")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<DisciplinaDto>))]
-        public async Task<IActionResult> GetDisciplinasDoProfessor([FromRoute] int professorId)
+        public async Task<IActionResult> ObterDisciplinasDoProfessor([FromRoute] int professorId)
         {
             try
             {
-                var disciplinas = await _disciplinaRepository.GetDisciplinasDoProfessor(professorId);
+                var disciplinas = await _disciplinaRepository.ObterDisciplinasDoProfessor(professorId);
                 var disciplinasDto = _mapper.Map<List<DisciplinaDto>>(disciplinas);
                 return Ok(disciplinasDto);
             }
@@ -66,11 +64,11 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{disciplinaId}/id")]
         [ProducesResponseType(200, Type = typeof(DisciplinaDto))]
-        public async Task<IActionResult> GetDisciplinaPeloId(int disciplinaId)
+        public async Task<IActionResult> ObterDisciplinaPeloId(int disciplinaId)
         {
             try
             {
-                var disciplina = await _disciplinaRepository.GetDisciplinaPeloId(disciplinaId);
+                var disciplina = await _disciplinaRepository.ObterDisciplinaPeloId(disciplinaId);
 
                 if (disciplina == null)
                     return NotFound("Disciplina não encontrada");
@@ -87,11 +85,11 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{nomeDaDisciplina}")]
         [ProducesResponseType(200, Type = typeof(DisciplinaDto))]
-        public async Task<IActionResult> GetDisciplinaByName(string nomeDaDisciplina)
+        public async Task<IActionResult> ObterDisciplinaByName(string nomeDaDisciplina)
         {
             try
             {
-                var disciplina = await _disciplinaRepository.GetDisciplinaPeloNome(nomeDaDisciplina);
+                var disciplina = await _disciplinaRepository.ObterDisciplinaPeloNome(nomeDaDisciplina);
 
                 if (disciplina == null)
                     return NotFound("Disciplina não encontrada");
@@ -111,7 +109,7 @@ namespace Gestor_Acadêmico.Controllers
         {
             try
             {
-                var disciplinasDoCurso = await _disciplinaRepository.GetDisciplinasDoCurso(disciplina.CursoId);
+                var disciplinasDoCurso = await _disciplinaRepository.ObterDisciplinasDoCurso(disciplina.CursoId);
                 var disciplinasDoSemestreDeReferencia = disciplinasDoCurso.Where(dis => dis.SemestreDeReferencia == disciplina.SemestreDeReferencia);
                 var contagem = disciplinasDoSemestreDeReferencia.Sum(a => a.AulasPorSemana) + disciplina.AulasPorSemana; 
 

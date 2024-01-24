@@ -1,6 +1,4 @@
 ﻿using Gestor_Acadêmico.Models;
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Gestor_Acadêmico.Dto
 {

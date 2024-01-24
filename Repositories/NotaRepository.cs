@@ -1,7 +1,5 @@
-﻿using Gestor_Acadêmico.Dto;
-using Gestor_Acadêmico.Models;
+﻿using Gestor_Acadêmico.Models;
 using Gestor_Acadêmico.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Gestor_Acadêmico.Context;
 
 namespace Gestor_Acadêmico.Repositories

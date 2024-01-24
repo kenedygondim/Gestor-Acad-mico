@@ -1,5 +1,4 @@
-﻿using Gestor_Acadêmico.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gestor_Acadêmico.Models

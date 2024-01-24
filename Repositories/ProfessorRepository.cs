@@ -27,17 +27,17 @@ namespace Gestor_Acadêmico.Repositories
             return await Save();
         }
 
-        public async Task<Professor> GetProfessorPeloId(int professorId)
+        public async Task<Professor> ObterProfessorPeloId(int professorId)
         {
             return await _context.Professores.Where(pro => pro.Id == professorId).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Professor>> GetProfessorPeloNome(string nomeDoProfessor)
+        public async Task<IEnumerable<Professor>> ObterProfessorPeloNome(string nomeDoProfessor)
         {
             return await _context.Professores.Where(pro => pro.NomeCompleto.Contains(nomeDoProfessor)).ToListAsync();
         }
 
-        public async Task<IEnumerable<Professor>> GetProfessores()
+        public async Task<IEnumerable<Professor>> ObterProfessores()
         {
             return await _context.Professores.ToListAsync();
         }

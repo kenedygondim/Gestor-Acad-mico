@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace Gestor_Acadêmico.Models
 {
     public class AlunoDisciplina

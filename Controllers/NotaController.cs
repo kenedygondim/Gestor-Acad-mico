@@ -2,8 +2,6 @@
 using Gestor_Acadêmico.Dto;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Models;
-using Gestor_Acadêmico.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gestor_Acadêmico.Controllers
@@ -33,7 +31,7 @@ namespace Gestor_Acadêmico.Controllers
                     return BadRequest("Insira os dados corretamente");
 
 
-                var subject = await _subjectRepository.GetDisciplinaPeloId(nota.DisciplinaId);
+                var subject = await _subjectRepository.ObterDisciplinaPeloId(nota.DisciplinaId);
 
                 if (subject == null)
                     return BadRequest("Essa disciplina não existe");

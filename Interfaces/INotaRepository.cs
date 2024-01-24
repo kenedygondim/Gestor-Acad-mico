@@ -1,5 +1,4 @@
-﻿using Gestor_Acadêmico.Dto;
-using Gestor_Acadêmico.Models;
+﻿using Gestor_Acadêmico.Models;
 
 namespace Gestor_Acadêmico.Interfaces
 {

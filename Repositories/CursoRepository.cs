@@ -20,17 +20,17 @@ namespace Gestor_Acadêmico.Repositories
             return await Save();
         }
 
-        public async Task<Curso> GetCursoPeloId(int cursoId)
+        public async Task<Curso> ObterCursoPeloId(int cursoId)
         {
             return await _context.Cursos.FirstOrDefaultAsync(cur => cur.Id == cursoId);
         }
 
-        public async Task<IEnumerable<Curso>> GetCursoPeloNome(string nomeDoCurso)
+        public async Task<IEnumerable<Curso>> ObterCursoPeloNome(string nomeDoCurso)
         {
             return await _context.Cursos.Where(cur => cur.NomeDoCurso.Contains(nomeDoCurso)).ToListAsync();
         }
 
-        public async Task<IEnumerable<Curso>> GetCursos()
+        public async Task<IEnumerable<Curso>> ObterCursos()
         {
             return await _context.Cursos.ToListAsync();
         }

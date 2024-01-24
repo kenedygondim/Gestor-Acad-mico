@@ -25,8 +25,7 @@ builder.Services.AddScoped<ICursoRepository, CursoRepository>();
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IDisciplinaRepository, DisciplinaRepository>();
 builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
-
-
+builder.Services.AddScoped<IAlunoDisciplinaRepository, AlunoDisciplinaRepository>();
 
 
 var app = builder.Build();

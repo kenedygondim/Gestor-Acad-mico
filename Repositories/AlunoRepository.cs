@@ -2,7 +2,6 @@
 using Gestor_Acadêmico.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Gestor_Acadêmico.Context;
-using System;
 
 namespace Gestor_Acadêmico.Repositories {
 
@@ -19,17 +18,14 @@ namespace Gestor_Acadêmico.Repositories {
 
         public async Task<bool> CriarAluno(Aluno aluno)
         {
-
-            Random random = new ();
             int anoAtual = DateTime.Now.Year;
             int mesAtual = DateTime.Now.Month;
             int semestreAtual = (mesAtual <= 6) ? 1 : 2;
 
-
-        Aluno alunoCriado = new() 
+            Aluno alunoCriado = new() 
             {
                 StatusDoAluno = aluno.StatusDoAluno,
-                Matricula = $"SP{random.Next(1000000, 10000000)}",
+                Matricula = aluno.Matricula,
                 CursoId = aluno.CursoId,
                 PeriodoDeIngresso = $"{anoAtual}.{semestreAtual}",  
                 PrimeiroNome = aluno.PrimeiroNome,
@@ -47,22 +43,22 @@ namespace Gestor_Acadêmico.Repositories {
             return await Save();
         }
 
-        public async Task<Aluno> GetAlunoPeloId(int alunoId)
+        public async Task<Aluno> ObterAlunoPeloId(int alunoId)
         {
             return await _context.Alunos.Where(alu => alu.Id == alunoId).Include(alu => alu.Notas).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Aluno>> GetAlunoPeloNome(string nomeDoAluno)
+        public async Task<IEnumerable<Aluno>> ObterAlunoPeloNome(string nomeDoAluno)
         {
             return await _context.Alunos.Where(alu => alu.NomeCompleto.Contains(nomeDoAluno)).ToListAsync();
         }
 
-        public async Task<IEnumerable<Nota>> GetNotasDoAluno(int alunoId)
+        public async Task<IEnumerable<Nota>> ObterNotasDoAluno(int alunoId)
         {
             return await _context.Notas.Where(not => not.AlunoId == alunoId).ToListAsync();   
         }
 
-        public async Task<IEnumerable<Aluno>> GetAlunos()
+        public async Task<IEnumerable<Aluno>> ObterAlunos()
         {
             return await _context.Alunos.ToListAsync();
         }
@@ -75,7 +71,7 @@ namespace Gestor_Acadêmico.Repositories {
 
         public async Task<bool> AtualizarAluno(Aluno aluno)
         {
-            var alunoFix = await GetAlunoPeloId(aluno.Id);
+            var alunoFix = await ObterAlunoPeloId(aluno.Id);
 
             if (alunoFix.Notas.Any())
             {
@@ -90,6 +86,9 @@ namespace Gestor_Acadêmico.Repositories {
             return await Save();
         }
 
-
+        public async Task<Aluno> ObterAlunoPelaMatricula(string matriculaDoAluno)
+        {
+            return await _context.Alunos.Where(alu => alu.Matricula == matriculaDoAluno).FirstOrDefaultAsync();
+        }
     }
 }

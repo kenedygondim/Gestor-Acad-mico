@@ -2,15 +2,8 @@
 using Gestor_Acadêmico.Dto;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Models;
-using Gestor_Acadêmico.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Elfie.Serialization;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Identity.Client;
-using System.Linq;
-using System.Text.Json;
-using static System.Reflection.Metadata.BlobBuilder;
+
 
 namespace Gestor_Acadêmico.Controllers
 {
@@ -27,11 +20,11 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<CursoDto>))]
-        public async Task<IActionResult> GetCursos()
+        public async Task<IActionResult> ObterCursos()
         {
             try
             {
-                var cursos = await _cursoRepository.GetCursos();
+                var cursos = await _cursoRepository.ObterCursos();
                 var cursosDto = _mapper.Map<List<CursoDto>>(cursos);
                 return Ok(cursosDto);
             }
@@ -43,11 +36,11 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{cursoId}/id")]
         [ProducesResponseType(200, Type = typeof(CursoDto))]
-        public async Task<IActionResult> GetCursoPeloId(int cursoId)
+        public async Task<IActionResult> ObterCursoPeloId(int cursoId)
         {
             try
             {
-                var curso = await _cursoRepository.GetCursoPeloId(cursoId);
+                var curso = await _cursoRepository.ObterCursoPeloId(cursoId);
 
                 if(curso == null)
                    return NotFound("Curso não encontrado");
@@ -64,11 +57,11 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{nomeDoCurso}")]
         [ProducesResponseType(200, Type = typeof(CursoDto))]
-        public async Task<IActionResult> GetCursoPeloNome(string nomeDoCurso)
+        public async Task<IActionResult> ObterCursoPeloNome(string nomeDoCurso)
         {
             try
             {
-                var curso = await _cursoRepository.GetCursoPeloNome(nomeDoCurso);
+                var curso = await _cursoRepository.ObterCursoPeloNome(nomeDoCurso);
 
                 if (curso == null)
                     return NotFound("Curso não encontrado");
@@ -119,7 +112,7 @@ namespace Gestor_Acadêmico.Controllers
         { 
             try
             {
-                var curso = await _cursoRepository.GetCursoPeloId(cursoId);
+                var curso = await _cursoRepository.ObterCursoPeloId(cursoId);
 
                 if (curso == null)
                     return NotFound("Curso inexistente");

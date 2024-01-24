@@ -1,13 +1,12 @@
-﻿using Gestor_Acadêmico.Dto;
-using Gestor_Acadêmico.Models;
+﻿using Gestor_Acadêmico.Models;
 
 namespace Gestor_Acadêmico.Interfaces
 {
     public interface IProfessorRepository
     {
-        Task<IEnumerable<Professor>> GetProfessores();
-        Task<Professor> GetProfessorPeloId(int professorId);
-        Task<IEnumerable<Professor>> GetProfessorPeloNome (string nomeDoProfessor);
+        Task<IEnumerable<Professor>> ObterProfessores();
+        Task<Professor> ObterProfessorPeloId(int professorId);
+        Task<IEnumerable<Professor>> ObterProfessorPeloNome (string nomeDoProfessor);
         Task<bool> CriarProfessor (Professor professor);
         Task<bool> AtualizarProfessor (Professor professor);
         Task<bool> ExcluirProfessor (Professor professor);

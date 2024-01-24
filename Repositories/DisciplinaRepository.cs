@@ -20,27 +20,27 @@ namespace Gestor_Acadêmico.Repositories
             return await Save();
         }
 
-        public async Task<Disciplina> GetDisciplinaPeloId(int disciplinaId)
+        public async Task<Disciplina> ObterDisciplinaPeloId(int disciplinaId)
         {
             return await _context.Disciplinas.Where(dis => dis.Id == disciplinaId).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Disciplina>> GetDisciplinaPeloNome(string nomeDaDisciplina)
+        public async Task<IEnumerable<Disciplina>> ObterDisciplinaPeloNome(string nomeDaDisciplina)
         {
             return await _context.Disciplinas.Where(dis => dis.NomeDaDisciplina.Contains(nomeDaDisciplina)).ToListAsync();
         }
 
-        public async Task<IEnumerable<Disciplina>> GetDisciplinas()
+        public async Task<IEnumerable<Disciplina>> ObterDisciplinas()
         {
             return await _context.Disciplinas.ToListAsync();
         }
 
-        public async Task<IEnumerable<Disciplina>> GetDisciplinasDoCurso(int? cursoId)
+        public async Task<IEnumerable<Disciplina>> ObterDisciplinasDoCurso(int? cursoId)
         {
             return await _context.Disciplinas.Where(dis => dis.CursoId == cursoId).ToListAsync();    
         }
 
-        public async Task<IEnumerable<Disciplina>> GetDisciplinasDoProfessor(int professorId)
+        public async Task<IEnumerable<Disciplina>> ObterDisciplinasDoProfessor(int professorId)
         {
             return await _context.Disciplinas.Where(dis => dis.ProfessorId == professorId).ToListAsync();
         }
