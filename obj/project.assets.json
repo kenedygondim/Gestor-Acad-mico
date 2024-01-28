@@ -8477,11 +8477,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\Gestor Acadêmico\\Gestor Acadêmico.csproj",
+      "projectUniqueName": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\api\\Gestor Acadêmico\\Gestor Acadêmico.csproj",
       "projectName": "Gestor Acadêmico",
-      "projectPath": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\Gestor Acadêmico\\Gestor Acadêmico.csproj",
+      "projectPath": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\api\\Gestor Acadêmico\\Gestor Acadêmico.csproj",
       "packagesPath": "C:\\Users\\kened\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\Gestor Acadêmico\\obj\\",
+      "outputPath": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\api\\Gestor Acadêmico\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\kened\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -3,7 +3,6 @@ namespace Gestor_Acadêmico.Models
 {
     public class Aluno : Pessoa
     {
-        //Exemplo: Matriculado, Desistente
         public required string StatusDoAluno { get; set; }
         public decimal? IRA { get; set; }
         public required int? CursoId { get; set; }

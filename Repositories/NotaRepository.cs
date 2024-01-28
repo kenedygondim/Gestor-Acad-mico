@@ -1,6 +1,7 @@
 ﻿using Gestor_Acadêmico.Models;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gestor_Acadêmico.Repositories
 {
@@ -16,20 +17,7 @@ namespace Gestor_Acadêmico.Repositories
 
         public async Task<bool> CriarNota(Nota nota)
         {
-            Nota notaFix = new()
-            {
-                Frequencia = nota.Frequencia,
-                PrimeiraAvaliacao = nota.PrimeiraAvaliacao,
-                SegundaAvaliacao = nota.SegundaAvaliacao,
-                Atividades = nota.Atividades,
-                NotasFechadas = nota.NotasFechadas,
-                MediaGeral = (nota.PrimeiraAvaliacao + nota.SegundaAvaliacao + nota.Atividades) / 3,
-                AlunoId = nota.AlunoId,
-                DisciplinaId = nota.DisciplinaId,
-                Aprovado = ((nota.PrimeiraAvaliacao + nota.SegundaAvaliacao + nota.Atividades) / 3) > 6 && nota.Frequencia > 75 && nota.NotasFechadas == true
-            }; 
-
-            await _context.AddAsync(notaFix);
+            await _context.AddAsync(nota);
             return await Save();
         }
 
@@ -43,6 +31,16 @@ namespace Gestor_Acadêmico.Repositories
         {
             _context.Update(nota);
             return await Save();
+        }
+
+        public async Task<IEnumerable<Nota>> ObterTodasAsNotas()
+        {
+            return await _context.Notas.ToListAsync();
+        }
+
+        public Task<Nota> ObterNotaEspecifica(int notaId)
+        {
+            return _context.Notas.FirstOrDefaultAsync(n => n.Id == notaId);
         }
     }
 }

@@ -3,7 +3,7 @@
     public class NotaDto
     {
         public int Id { get; set; }
-        public decimal? Frequencia { get; set; }
+        public decimal? FrequenciaDoAluno { get; set; }
         public decimal PrimeiraAvaliacao { get; set; }
         public decimal SegundaAvaliacao { get; set; }
         public decimal Atividades { get; set; }

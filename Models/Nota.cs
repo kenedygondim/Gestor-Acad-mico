@@ -9,9 +9,8 @@ namespace Gestor_Acadêmico.Models
         [Key]
         public int Id { get; set; }
 
-        [Range(0, 100)]
         [DefaultValue(100)]
-        public decimal Frequencia { get; set; }
+        public decimal FrequenciaDoAluno { get; set; }
 
         [Range(0, 10)]
         [DefaultValue(0)]
@@ -25,14 +24,14 @@ namespace Gestor_Acadêmico.Models
         [DefaultValue(0)]
         public decimal Atividades { get; set; }
 
-        public required int AlunoId { get; set; }
+        public int? AlunoId { get; set; }
         public Aluno? Aluno { get; set; }
 
-        public  required int DisciplinaId { get; set; }
+        public int? DisciplinaId { get; set; }
         public Disciplina? Disciplina { get; set; }
 
         [DefaultValue(false)]
-        public bool? NotasFechadas { get; set; }
+        public bool NotasFechadas { get; set; }
 
         [Range(0, 10)]
         public decimal MediaGeral {  get; set; }

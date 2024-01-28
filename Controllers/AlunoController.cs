@@ -12,12 +12,14 @@ namespace Gestor_Acadêmico.Controllers
         IAlunoRepository alunoRepository,
         IAlunoDisciplinaRepository alunoDisciplinaRepository,
         IDisciplinaRepository disciplinaRepository,
+        INotaRepository notaRepository,
         IMapper mapper
         ) : ControllerBase
     {
         private readonly IAlunoRepository _alunoRepository = alunoRepository;
         private readonly IAlunoDisciplinaRepository _alunoDisciplinaRepository = alunoDisciplinaRepository;
         private readonly IDisciplinaRepository _disciplinaRepository = disciplinaRepository;
+        private readonly INotaRepository _notaRepository = notaRepository;
         private readonly IMapper _mapper = mapper;
 
         readonly string[] status = ["Matriculado", "Trancado", "Formado", "Desistente", "Afastado"];
@@ -50,7 +52,6 @@ namespace Gestor_Acadêmico.Controllers
                 if (aluno == null)
                     return NotFound("Aluno não encontrado");
 
-
                 var alunoDto = _mapper.Map<AlunoDto>(aluno);
                 return Ok(alunoDto);
             }
@@ -70,7 +71,6 @@ namespace Gestor_Acadêmico.Controllers
 
                 if (notas == null)
                     return NotFound("Notas não encontradas");
-
 
                 var notasDto = _mapper.Map<List<NotaDto>>(notas);
                 return Ok(notasDto);
@@ -125,21 +125,18 @@ namespace Gestor_Acadêmico.Controllers
         [ProducesResponseType(200, Type = typeof(AlunoDto))]
         public async Task<IActionResult> CriarAluno(Aluno aluno)
         {
-            Random random = new Random();
+            Random random = new ();
 
             try
             {
                 if (aluno == null || !ModelState.IsValid)
-                    return BadRequest("Insira os dados corretamente");
+                    return BadRequest("Insira os dados corretamente!");
 
                 if (!status.Contains(aluno.StatusDoAluno, StringComparer.OrdinalIgnoreCase))
                     return BadRequest("Insira uma situação válida: 'Matrículado', 'Trancado', 'Formado', 'Desistente', 'Afastado'");
 
                 if (!generos.Contains(aluno.Genero, StringComparer.OrdinalIgnoreCase))
                     return BadRequest("Insira um genêro válida: 'Masculino', 'Feminino', 'Outro'");
-
-                if (aluno.Cpf.Length != 11)
-                    return BadRequest("O campo CPF deve ter 11 dígitos sem pontos ou traços");
 
                 string matriculaGerada = $"SP{random.Next(1000000, 9999999)}";
                 var alunoJaExiste = await _alunoRepository.ObterAlunoPelaMatricula(matriculaGerada);
@@ -171,7 +168,24 @@ namespace Gestor_Acadêmico.Controllers
                             DisciplinaId = disciplina.Id
                         };
 
+                        var nota = new Nota()
+                        {
+                            AlunoId = alunoCriado.Id,
+                            DisciplinaId = disciplina.Id,
+                            PrimeiraAvaliacao = 0,
+                            SegundaAvaliacao = 0,
+                            Atividades = 0,
+                            MediaGeral = 0,
+                            FrequenciaDoAluno = 99,
+                            NotasFechadas = false,
+                            Aprovado = false
+                        };
+
+
+                        await _notaRepository.CriarNota(nota);
+
                         await _alunoDisciplinaRepository.AdicionarAlunoNaDisciplina(alunoDisciplina);
+                        
                     }
                 }
                 /////////////////////////////////////////////////////////////////////////////////////

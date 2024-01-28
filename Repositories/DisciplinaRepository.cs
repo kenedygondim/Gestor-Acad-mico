@@ -56,5 +56,10 @@ namespace Gestor_Acadêmico.Repositories
             _context.Update(disciplina);
             return await Save();
         }
+
+        public Task ObterDisciplinaPeloId(int? disciplinaId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

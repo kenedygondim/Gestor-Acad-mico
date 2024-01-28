@@ -4,6 +4,7 @@ using Gestor_Acadêmico.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gestor_Acadêmico.Migrations
 {
     [DbContext(typeof(GestorAcademicoContext))]
-    partial class GestorAcademicoContextModelSnapshot : ModelSnapshot
+    [Migration("20240126004928_ConsertandoPropriedade")]
+    partial class ConsertandoPropriedade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,7 +214,7 @@ namespace Gestor_Acadêmico.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AlunoId")
+                    b.Property<int>("AlunoId")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Aprovado")
@@ -220,7 +223,7 @@ namespace Gestor_Acadêmico.Migrations
                     b.Property<decimal>("Atividades")
                         .HasColumnType("decimal(4,2)");
 
-                    b.Property<int?>("DisciplinaId")
+                    b.Property<int>("DisciplinaId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("FrequenciaDoAluno")
@@ -229,7 +232,7 @@ namespace Gestor_Acadêmico.Migrations
                     b.Property<decimal>("MediaGeral")
                         .HasColumnType("decimal(4,2)");
 
-                    b.Property<bool>("NotasFechadas")
+                    b.Property<bool?>("NotasFechadas")
                         .HasColumnType("bit");
 
                     b.Property<decimal>("PrimeiraAvaliacao")
@@ -243,8 +246,7 @@ namespace Gestor_Acadêmico.Migrations
                     b.HasIndex("AlunoId");
 
                     b.HasIndex("DisciplinaId")
-                        .IsUnique()
-                        .HasFilter("[DisciplinaId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Notas");
                 });
@@ -353,11 +355,14 @@ namespace Gestor_Acadêmico.Migrations
                     b.HasOne("Gestor_Acadêmico.Models.Aluno", "Aluno")
                         .WithMany("Notas")
                         .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Gestor_Acadêmico.Models.Disciplina", "Disciplina")
                         .WithOne("Nota")
-                        .HasForeignKey("Gestor_Acadêmico.Models.Nota", "DisciplinaId");
+                        .HasForeignKey("Gestor_Acadêmico.Models.Nota", "DisciplinaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Aluno");
 

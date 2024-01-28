@@ -75,7 +75,8 @@ namespace Gestor_Acadêmico.Repositories {
 
             if (alunoFix.Notas.Any())
             {
-                aluno.IRA = alunoFix.Notas.Sum(not => not.MediaGeral) / alunoFix.Notas.Count();
+                var teste = alunoFix.Notas.Where(not => not.NotasFechadas).ToList();
+                aluno.IRA = teste.Sum(not => not.MediaGeral) / teste.Count();
             }
             else
             {

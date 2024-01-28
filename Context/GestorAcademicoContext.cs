@@ -5,22 +5,6 @@ namespace Gestor_Acadêmico.Context
 {
     public class GestorAcademicoContext(DbContextOptions<GestorAcademicoContext> options) : DbContext(options)
     {
-        public override int SaveChanges()
-        {
-            foreach (var entry in ChangeTracker.Entries<Nota>())
-            {
-                if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
-                {
-                    var nota = entry.Entity;
-
-                    nota.MediaGeral = (nota.PrimeiraAvaliacao + nota.SegundaAvaliacao + nota.Atividades) / 3;
-
-                    nota.Aprovado = nota.MediaGeral >= 6;
-                }
-            }
-
-            return base.SaveChanges();
-        }
 
         public DbSet<Aluno> Alunos { get; set; }
         public DbSet<Curso> Cursos { get; set; }
@@ -49,7 +33,7 @@ namespace Gestor_Acadêmico.Context
             .HasColumnType("decimal(4,2)");
 
             modelBuilder.Entity<Nota>()
-            .Property(not => not.Frequencia)
+            .Property(not => not.FrequenciaDoAluno)
             .HasColumnType("decimal(4,2)");
 
             modelBuilder.Entity<Aluno>()
@@ -63,7 +47,6 @@ namespace Gestor_Acadêmico.Context
             modelBuilder.Entity<Disciplina>()
             .Property(dis => dis.CargaHoraria)
             .HasColumnType("decimal(8,1)");
-
 
 
             modelBuilder.Entity<Aluno>()
@@ -90,7 +73,6 @@ namespace Gestor_Acadêmico.Context
                 .HasIndex(alu => alu.Matricula)
                 .IsUnique();
 
-
             modelBuilder.Entity<Aluno>()
                  .HasOne(alu => alu.Curso)
                  .WithMany(cur => cur.Alunos)
@@ -106,8 +88,6 @@ namespace Gestor_Acadêmico.Context
                 .HasOne(aludis => aludis.Disciplina)
                 .WithMany(dis => dis.Alunos)
                 .HasForeignKey(aludis => aludis.DisciplinaId);
-
-
 
             modelBuilder.Entity<Disciplina>()
                 .HasOne(dis => dis.Nota)
@@ -127,7 +107,6 @@ namespace Gestor_Acadêmico.Context
                 .WithMany(pro => pro.Disciplinas)
                 .HasForeignKey(dis => dis.ProfessorId)
                 .OnDelete(DeleteBehavior.SetNull);
-
 
             modelBuilder.Entity<Aluno>()
                 .HasMany(alu => alu.Notas)

@@ -12,5 +12,6 @@ namespace Gestor_Acadêmico.Interfaces
         Task<bool> CriarDisciplina(Disciplina disciplina);
         Task<bool> AtualizarDisciplina(Disciplina disciplina);
         Task<bool> Save();
+        Task ObterDisciplinaPeloId(int? disciplinaId);
     }
 }

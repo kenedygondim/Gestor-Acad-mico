@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "G8JBj7LdoDpSrPdpPydxMOr5gBtffAkXkKLah+vylv4=",
+  "Hash": "piTvxfRNxrC2KJ/qtmymKQwQSrDYefk0OoUQ74h7Q40=",
   "Source": "Gestor Acadêmico",
   "BasePath": "_content/Gestor Acadêmico",
   "Mode": "Default",
@@ -47,10 +47,10 @@
       "OriginalItemSpec": "C:\\Users\\kened\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.0\\staticwebassets\\QuickGrid.razor.js"
     },
     {
-      "Identity": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\Gestor Acadêmico\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Gestor Acadêmico.styles.css",
+      "Identity": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\api\\Gestor Acadêmico\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Gestor Acadêmico.styles.css",
       "SourceId": "Gestor Acadêmico",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\Gestor Acadêmico\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\api\\Gestor Acadêmico\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
       "BasePath": "_content/Gestor Acadêmico",
       "RelativePath": "Gestor Acadêmico.styles.css",
       "AssetKind": "All",
@@ -63,7 +63,7 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\Gestor Acadêmico\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Gestor Acadêmico.styles.css"
+      "OriginalItemSpec": "C:\\Users\\kened\\OneDrive\\Documentos\\C#\\api\\Gestor Acadêmico\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Gestor Acadêmico.styles.css"
     }
   ]
 }

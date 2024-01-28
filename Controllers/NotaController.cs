@@ -11,40 +11,58 @@ namespace Gestor_Acadêmico.Controllers
     public class NotaController
         (
         INotaRepository NotaRepository,
-        IAlunoRepository studentRepository,
-        IDisciplinaRepository subjectRepository,
+        IAlunoRepository alunoRepository,
+        IDisciplinaRepository disciplinaRepository,
         IMapper mapper
         ) 
         : ControllerBase
     {
         private readonly INotaRepository _NotaRepository = NotaRepository;
-        private readonly IDisciplinaRepository _subjectRepository = subjectRepository;
         private readonly IMapper _mapper = mapper;
 
-        [HttpPost]
+
+        [HttpPut("{notaId}/atualizar")]
         [ProducesResponseType(200, Type = typeof(NotaDto))]
-        public async Task<IActionResult> CriarNota(Nota nota)
+        public async Task<IActionResult> AtualizarNota(int notaId, Nota notasRecebidas)
         {
             try
             {
-                if (nota == null || !ModelState.IsValid)
+                if (notaId != notasRecebidas.Id)
+                    return BadRequest("Id da nota não encontrado");
+
+                if (notasRecebidas == null || !ModelState.IsValid )
                     return BadRequest("Insira os dados corretamente");
 
+                var nota = await _NotaRepository.ObterNotaEspecifica(notasRecebidas.Id);
 
-                var subject = await _subjectRepository.ObterDisciplinaPeloId(nota.DisciplinaId);
+                if (nota == null)
+                    return BadRequest("Notas não encontradas");
 
-                if (subject == null)
-                    return BadRequest("Essa disciplina não existe");
+                nota.FrequenciaDoAluno = notasRecebidas.FrequenciaDoAluno;
+                nota.PrimeiraAvaliacao = notasRecebidas.PrimeiraAvaliacao;
+                nota.SegundaAvaliacao = notasRecebidas.SegundaAvaliacao;
+                nota.Atividades = notasRecebidas.Atividades;
+                nota.MediaGeral = (notasRecebidas.PrimeiraAvaliacao + nota.SegundaAvaliacao + nota.Atividades) / 3;
+                nota.NotasFechadas = notasRecebidas.NotasFechadas;
 
-                await _NotaRepository.CriarNota(nota);
+                if(nota.NotasFechadas && nota.MediaGeral > 6 && nota.FrequenciaDoAluno > 75)
+                {
+                    nota.Aprovado = true;
+                } 
+                else
+                {
+                    nota.Aprovado = false;
+                }    
+
+                await _NotaRepository.AtualizarNota(nota);
 
                 var notaDto = _mapper.Map<NotaDto>(nota);
 
                 return Ok(notaDto);
             }
-            catch
+            catch (Exception e)
             {
-                return BadRequest("Não foi possível criar nota");
+                return BadRequest("Não foi possível atualizar nota" + e.Message);
             }
         }
     }
