@@ -18,6 +18,7 @@ namespace Gestor_Acadêmico.Controllers
         : ControllerBase
     {
         private readonly INotaRepository _NotaRepository = NotaRepository;
+        private readonly IAlunoRepository _alunoRepository = alunoRepository;
         private readonly IMapper _mapper = mapper;
 
 
@@ -55,6 +56,20 @@ namespace Gestor_Acadêmico.Controllers
                 }    
 
                 await _NotaRepository.AtualizarNota(nota);
+
+                var aluno = await _alunoRepository.ObterAlunoPeloId((int) nota.AlunoId);
+
+                if (aluno.Notas.Any())
+                {
+                    var teste = aluno.Notas.Where(not => not.NotasFechadas).ToList();
+                    aluno.IRA = teste.Sum(not => not.MediaGeral) / teste.Count();
+                }
+                else
+                {
+                    aluno.IRA = 0;
+                }
+
+                await _alunoRepository.AtualizarAluno(aluno);
 
                 var notaDto = _mapper.Map<NotaDto>(nota);
 

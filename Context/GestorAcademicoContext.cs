@@ -5,7 +5,6 @@ namespace Gestor_Acadêmico.Context
 {
     public class GestorAcademicoContext(DbContextOptions<GestorAcademicoContext> options) : DbContext(options)
     {
-
         public DbSet<Aluno> Alunos { get; set; }
         public DbSet<Curso> Cursos { get; set; }
         public DbSet<Disciplina> Disciplinas { get; set; }
@@ -13,9 +12,9 @@ namespace Gestor_Acadêmico.Context
         public DbSet<Nota> Notas { get; set; }
         public DbSet<Professor> Professores { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //declaração de tamanho decimal para as propriedades
             modelBuilder.Entity<Nota>()
             .Property(not => not.Atividades)
             .HasColumnType("decimal(4,2)");
@@ -34,7 +33,7 @@ namespace Gestor_Acadêmico.Context
 
             modelBuilder.Entity<Nota>()
             .Property(not => not.FrequenciaDoAluno)
-            .HasColumnType("decimal(4,2)");
+            .HasColumnType("decimal(5,2)");
 
             modelBuilder.Entity<Aluno>()
             .Property(alu => alu.IRA)
@@ -48,7 +47,7 @@ namespace Gestor_Acadêmico.Context
             .Property(dis => dis.CargaHoraria)
             .HasColumnType("decimal(8,1)");
 
-
+        //declaração de unicidade para as propriedades
             modelBuilder.Entity<Aluno>()
                 .HasIndex(alu => alu.Cpf)
                 .IsUnique();
@@ -73,6 +72,7 @@ namespace Gestor_Acadêmico.Context
                 .HasIndex(alu => alu.Matricula)
                 .IsUnique();
 
+            //declaração das relações entre as entidades
             modelBuilder.Entity<Aluno>()
                  .HasOne(alu => alu.Curso)
                  .WithMany(cur => cur.Alunos)
@@ -89,18 +89,16 @@ namespace Gestor_Acadêmico.Context
                 .WithMany(dis => dis.Alunos)
                 .HasForeignKey(aludis => aludis.DisciplinaId);
 
-            modelBuilder.Entity<Disciplina>()
-                .HasOne(dis => dis.Nota)
-                .WithOne(not => not.Disciplina)
-                .HasForeignKey<Nota>(not => not.DisciplinaId);
-
-
+            modelBuilder.Entity<Nota>()
+                .HasOne(not => not.Disciplina)
+                .WithMany(dis => dis.Notas)
+                .HasForeignKey(not => not.DisciplinaId);
+                
             modelBuilder.Entity<Curso>()
                 .HasMany(cur => cur.Disciplinas)
                 .WithOne(dis => dis.Curso)
                 .HasForeignKey(dis => dis.CursoId)
                 .OnDelete(DeleteBehavior.SetNull);
-
 
             modelBuilder.Entity<Disciplina>()
                 .HasOne(dis => dis.Professor)

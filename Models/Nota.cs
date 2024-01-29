@@ -9,7 +9,7 @@ namespace Gestor_Acadêmico.Models
         [Key]
         public int Id { get; set; }
 
-        [DefaultValue(100)]
+        [Range(0,100)]
         public decimal FrequenciaDoAluno { get; set; }
 
         [Range(0, 10)]

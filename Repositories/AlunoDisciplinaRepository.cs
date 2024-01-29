@@ -14,9 +14,9 @@ namespace Gestor_Acadêmico.Repositories
             _context = context;
         }
 
-        public async Task<bool> AdicionarAlunoNaDisciplina(AlunoDisciplina alunoDisciplina)
+        public async Task<bool> AdicionarAlunoNasDisciplinas(List<AlunoDisciplina> alunoDisciplina)
         {
-            await _context.AddAsync(alunoDisciplina);
+            await _context.AddRangeAsync(alunoDisciplina);
             return await Save();
         }
 

@@ -4,6 +4,7 @@ using Gestor_Acadêmico.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gestor_Acadêmico.Migrations
 {
     [DbContext(typeof(GestorAcademicoContext))]
-    partial class GestorAcademicoContextModelSnapshot : ModelSnapshot
+    [Migration("20240128141905_AjusteDeRelacaoNotaDisciplina")]
+    partial class AjusteDeRelacaoNotaDisciplina
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,7 +227,7 @@ namespace Gestor_Acadêmico.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("FrequenciaDoAluno")
-                        .HasColumnType("decimal(5,2)");
+                        .HasColumnType("decimal(4,2)");
 
                     b.Property<decimal>("MediaGeral")
                         .HasColumnType("decimal(4,2)");

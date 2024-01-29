@@ -50,7 +50,7 @@ namespace Gestor_Acadêmico.Repositories {
 
         public async Task<IEnumerable<Aluno>> ObterAlunoPeloNome(string nomeDoAluno)
         {
-            return await _context.Alunos.Where(alu => alu.NomeCompleto.Contains(nomeDoAluno)).ToListAsync();
+            return await _context.Alunos.Where(alu => alu.NomeCompleto.Contains(nomeDoAluno)).OrderBy(alu => alu.NomeCompleto).ToListAsync();
         }
 
         public async Task<IEnumerable<Nota>> ObterNotasDoAluno(int alunoId)
@@ -84,6 +84,12 @@ namespace Gestor_Acadêmico.Repositories {
             }
 
             _context.Update(aluno);
+            return await Save();
+        }
+
+        public async Task<bool> DeletarAluno(Aluno aluno)
+        {
+            _context.Remove(aluno);
             return await Save();
         }
 

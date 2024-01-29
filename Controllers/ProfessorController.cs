@@ -3,6 +3,7 @@ using Gestor_Acadêmico.Dto;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace Gestor_Acadêmico.Controllers
 {
@@ -14,6 +15,7 @@ namespace Gestor_Acadêmico.Controllers
         private readonly IProfessorRepository _professorRepository = professorRepository;
         private readonly IMapper _mapper = mapper;
 
+        //Array de gêneros para validação
         readonly string[] generos = ["Masculino", "Feminino", "Outros"];
 
         [HttpGet]
@@ -28,7 +30,7 @@ namespace Gestor_Acadêmico.Controllers
             }
             catch
             {
-                return BadRequest("Não foi possível recuperar a lista de professores");
+                return BadRequest($"Não foi possível recuperar a lista de professores.");
             }
         }
 

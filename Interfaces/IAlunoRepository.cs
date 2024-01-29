@@ -11,6 +11,7 @@ namespace Gestor_Acadêmico.Interfaces
         Task<IEnumerable<Nota>> ObterNotasDoAluno(int alunoId);
         Task<bool> CriarAluno(Aluno aluno);
         Task<bool> AtualizarAluno(Aluno aluno);
+        Task<bool> DeletarAluno(Aluno aluno);
         Task<bool> Save();
     }
 }

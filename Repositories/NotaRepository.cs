@@ -15,9 +15,9 @@ namespace Gestor_Acadêmico.Repositories
             _context.Database.EnsureCreated();
         }
 
-        public async Task<bool> CriarNota(Nota nota)
+        public async Task<bool> CriarNotas(List<Nota> notas)
         {
-            await _context.AddAsync(nota);
+            await _context.AddRangeAsync(notas);
             return await Save();
         }
 

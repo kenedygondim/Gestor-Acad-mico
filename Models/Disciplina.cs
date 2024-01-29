@@ -32,6 +32,6 @@ namespace Gestor_Acadêmico.Models
 
         public IEnumerable<AlunoDisciplina>? Alunos { get; set; }
 
-        public Nota? Nota { get; set; }
+        public IEnumerable<Nota>? Notas { get; set; }
     }
 }
