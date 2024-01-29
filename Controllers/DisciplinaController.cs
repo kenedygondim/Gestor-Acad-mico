@@ -64,7 +64,7 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{disciplinaId}/id")]
         [ProducesResponseType(200, Type = typeof(DisciplinaDto))]
-        public async Task<IActionResult> ObterDisciplinaPeloId(int disciplinaId)
+        public async Task<IActionResult> ObterDisciplinaPeloId([FromRoute] int disciplinaId)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{nomeDaDisciplina}")]
         [ProducesResponseType(200, Type = typeof(DisciplinaDto))]
-        public async Task<IActionResult> ObterDisciplinaByName(string nomeDaDisciplina)
+        public async Task<IActionResult> ObterDisciplinaByName([FromRoute] string nomeDaDisciplina)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(DisciplinaDto))]
-        public async Task<IActionResult> CriarDisciplina(Disciplina disciplina)
+        public async Task<IActionResult> CriarDisciplina([FromBody] Disciplina disciplina)
         {
             try
             {

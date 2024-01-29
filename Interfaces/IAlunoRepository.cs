@@ -4,7 +4,7 @@ namespace Gestor_Acadêmico.Interfaces
 {
     public interface IAlunoRepository
     {
-        Task<IEnumerable<Aluno>> ObterAlunos();
+        Task<IEnumerable<Aluno>> ObterTodosOsAlunos();
         Task<Aluno> ObterAlunoPeloId(int alunoId);
         Task<Aluno> ObterAlunoPelaMatricula(string matriculaDoAluno);
         Task<IEnumerable<Aluno>> ObterAlunoPeloNome(string nomeDoAluno);

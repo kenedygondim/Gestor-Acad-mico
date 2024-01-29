@@ -5,19 +5,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gestor_Acadêmico.Repositories
 {
-    public class ProfessorRepository : IProfessorRepository
+    public class ProfessorRepository(GestorAcademicoContext context) : IProfessorRepository
     {
-        private readonly GestorAcademicoContext _context;
+        private readonly GestorAcademicoContext _context = context;
 
-        public ProfessorRepository(GestorAcademicoContext context)
+        public async Task<IEnumerable<Professor>> ObterProfessores()
         {
-            _context = context;
-            _context.Database.EnsureCreated();
+            return await _context.Professores.ToListAsync();
+        }
+
+        public async Task<Professor> ObterProfessorPeloId(int professorId)
+        {
+            return await _context.Professores.FirstOrDefaultAsync(pro => pro.Id == professorId);
+        }
+
+        public async Task<IEnumerable<Professor>> ObterProfessorPeloNome(string nomeDoProfessor)
+        {
+            return await _context.Professores.Where(pro => pro.NomeCompleto.Contains(nomeDoProfessor)).ToListAsync();
         }
 
         public async Task<bool> CriarProfessor(Professor professor)
         {
             await _context.AddAsync(professor);
+            return await Save();
+        }
+
+        public async Task<bool> AtualizarProfessor(Professor professor)
+        {
+            _context.Update(professor);
             return await Save();
         }
 
@@ -27,31 +42,10 @@ namespace Gestor_Acadêmico.Repositories
             return await Save();
         }
 
-        public async Task<Professor> ObterProfessorPeloId(int professorId)
-        {
-            return await _context.Professores.Where(pro => pro.Id == professorId).FirstOrDefaultAsync();
-        }
-
-        public async Task<IEnumerable<Professor>> ObterProfessorPeloNome(string nomeDoProfessor)
-        {
-            return await _context.Professores.Where(pro => pro.NomeCompleto.Contains(nomeDoProfessor)).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Professor>> ObterProfessores()
-        {
-            return await _context.Professores.ToListAsync();
-        }
-
         public async Task<bool> Save()
         {
             var saved = await _context.SaveChangesAsync();
             return saved > 0;
-        }
-
-        public async Task<bool> AtualizarProfessor(Professor professor)
-        {
-            _context.Update(professor);
-            return await Save();
         }
     }
 }

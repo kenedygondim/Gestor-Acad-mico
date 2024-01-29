@@ -19,6 +19,7 @@ namespace Gestor_Acadêmico
                 gestorAcademicoContext.AddRange(cursos);
                 gestorAcademicoContext.SaveChanges();   
             }
+/*
             if (!gestorAcademicoContext.Professores.Any())
             {
                 var professores = new List<Professor>() {
@@ -34,10 +35,7 @@ namespace Gestor_Acadêmico
 
                 gestorAcademicoContext.AddRange(professores);
                 gestorAcademicoContext.SaveChanges();
-            }
+            }*/
         }
     }
-
-
-
 }

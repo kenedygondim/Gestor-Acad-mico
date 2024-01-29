@@ -5,14 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gestor_Acadêmico.Repositories
 {
-    public class AlunoDisciplinaRepository : IAlunoDisciplinaRepository
+    public class AlunoDisciplinaRepository(GestorAcademicoContext context) : IAlunoDisciplinaRepository
     {
-        private readonly GestorAcademicoContext _context;
-
-        public AlunoDisciplinaRepository(GestorAcademicoContext context)
-        {
-            _context = context;
-        }
+        private readonly GestorAcademicoContext _context = context;
 
         public async Task<bool> AdicionarAlunoNasDisciplinas(List<AlunoDisciplina> alunoDisciplina)
         {

@@ -5,19 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gestor_Acadêmico.Repositories
 {
-    public class CursoRepository : ICursoRepository
+    public class CursoRepository(GestorAcademicoContext context) : ICursoRepository
     {
-        private readonly GestorAcademicoContext _context;
+        private readonly GestorAcademicoContext _context = context;
 
-        public CursoRepository(GestorAcademicoContext context)
+        public async Task<IEnumerable<Curso>> ObterCursos()
         {
-            _context = context;
-        }
-
-        public async Task<bool> CriarCurso(Curso curso)
-        {
-            await _context.AddAsync(curso);
-            return await Save();
+            return await _context.Cursos.ToListAsync();
         }
 
         public async Task<Curso> ObterCursoPeloId(int cursoId)
@@ -27,24 +21,25 @@ namespace Gestor_Acadêmico.Repositories
 
         public async Task<IEnumerable<Curso>> ObterCursoPeloNome(string nomeDoCurso)
         {
-            return await _context.Cursos.Where(cur => cur.NomeDoCurso.Contains(nomeDoCurso)).ToListAsync();
+            return await _context.Cursos.Where(cur => cur.NomeDoCurso.Contains(nomeDoCurso)).OrderBy(cur=>cur.NomeDoCurso).ToListAsync();
         }
 
-        public async Task<IEnumerable<Curso>> ObterCursos()
+        public async Task<bool> CriarCurso(Curso curso)
         {
-            return await _context.Cursos.ToListAsync();
+            await _context.AddAsync(curso);
+            return await Save();
+        }
+
+        public async Task<bool> AtualizarCurso(Curso curso)
+        {
+            _context.Update(curso);
+            return await Save();
         }
 
         public async Task<bool> Save()
         {
             var saved = await _context.SaveChangesAsync();
             return saved > 0;
-        }
-
-        public async  Task<bool> AtualizarCurso(Curso curso)
-        {
-            _context.Update(curso);
-            return await Save();
         }
     }
 }

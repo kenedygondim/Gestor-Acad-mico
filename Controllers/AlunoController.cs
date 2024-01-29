@@ -31,7 +31,7 @@ namespace Gestor_Acadêmico.Controllers
         {
             try
             {
-                var alunos = await _alunoRepository.ObterAlunos();
+                var alunos = await _alunoRepository.ObterTodosOsAlunos();
                 var alunosDto = _mapper.Map<List<AlunoDto>>(alunos);
                 return Ok(alunosDto);
             }
@@ -43,7 +43,7 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{alunoId}/id")]
         [ProducesResponseType(200, Type = typeof(AlunoDto))]
-        public async Task<IActionResult> ObterAlunoPeloId(int alunoId)
+        public async Task<IActionResult> ObterAlunoPeloId([FromRoute] int alunoId)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{alunoId}/notas")]
         [ProducesResponseType(200, Type = typeof(NotaDto))]
-        public async Task<IActionResult> ObterNotasDoAluno(int alunoId)
+        public async Task<IActionResult> ObterNotasDoAluno([FromRoute] int alunoId)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{nomeDoAluno}")]
         [ProducesResponseType(200, Type = typeof(AlunoDto))]
-        public async Task<IActionResult> ObterAlunoPeloNome(string nomeDoAluno)
+        public async Task<IActionResult> ObterAlunoPeloNome([FromRoute] string nomeDoAluno)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{alunoId}/id/disciplinas")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<DisciplinaDto>))]
-        public async Task<IActionResult> ObterDisciplinasDoAluno(int alunoId)
+        public async Task<IActionResult> ObterDisciplinasDoAluno([FromRoute] int alunoId)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace Gestor_Acadêmico.Controllers
         //Código comentado para maior entendimento.
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(AlunoDto))]
-        public async Task<IActionResult> CriarAluno(Aluno aluno)
+        public async Task<IActionResult> CriarAluno([FromBody] Aluno aluno)
         {
             Random random = new();
 
@@ -163,7 +163,7 @@ namespace Gestor_Acadêmico.Controllers
                 var alunoCriado = await _alunoRepository.ObterAlunoPelaMatricula(aluno.Matricula);
 
                 //Obtendo as disciplinas do curso do aluno
-                var disciplinasDoCurso = await _disciplinaRepository.ObterDisciplinasDoCurso(alunoCriado.CursoId);
+                var disciplinasDoCurso = await _disciplinaRepository.ObterDisciplinasDoCurso((int) alunoCriado.CursoId);
 
                 //Filtrando as disciplinas do primeiro semestre do curso localmente
                 var disciplinasDoPrimeiroSemestre = disciplinasDoCurso.Where(dis => dis.SemestreDeReferencia == 1);

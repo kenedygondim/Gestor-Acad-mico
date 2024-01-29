@@ -256,31 +256,25 @@ C:\Users\kened\OneDrive\Documentos\C#\Gestor Acadêmico\bin\Debug\net8.0\runtime
 C:\Users\kened\OneDrive\Documentos\C#\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\kened\OneDrive\Documentos\C#\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
 C:\Users\kened\OneDrive\Documentos\C#\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.sourcelink.json
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Gestor Acadêmico.exe
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Gestor Acadêmico.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\AutoMapper.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Azure.Core.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.Identity.Client.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.OpenApi.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.csproj.AssemblyReference.cache
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.AssemblyInfoInputs.cache
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.AssemblyInfo.cs
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.csproj.CoreCompileInputs.cache
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.sourcelink.json
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\appsettings.json
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Gestor Acadêmico.staticwebassets.runtime.json
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Gestor Acadêmico.exe
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Gestor Acadêmico.deps.json
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Gestor Acadêmico.runtimeconfig.json
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Gestor Acadêmico.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Gestor Acadêmico.pdb
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Azure.Core.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Azure.Identity.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Humanizer.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.AspNetCore.Components.QuickGrid.dll
@@ -302,15 +296,23 @@ C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Mic
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.Data.SqlClient.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.DiaSymReader.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.DotNet.Scaffolding.Shared.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.Identity.Client.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.Identity.Client.Extensions.Msal.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.NET.StringTools.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.VisualStudio.Web.CodeGeneration.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\dotnet-aspnet-codegenerator-design.dll
@@ -330,12 +332,16 @@ C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\NuG
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\NuGet.ProjectModel.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\NuGet.Protocol.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\NuGet.Versioning.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\System.CodeDom.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\System.Composition.AttributedModel.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\System.Composition.Convention.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\System.Composition.Hosting.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\System.Composition.Runtime.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\System.Composition.TypedParts.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\System.Drawing.Common.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\System.Memory.Data.dll
@@ -484,22 +490,16 @@ C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\tr\
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.csproj.AssemblyReference.cache
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.AssemblyInfoInputs.cache
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.AssemblyInfo.cs
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.csproj.CoreCompileInputs.cache
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\Gestor Acadêmico.sourcelink.json
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\kened\OneDrive\Documentos\C#\api\Gestor Acadêmico\obj\Debug\net8.0\staticwebassets\msbuild.Gestor Acadêmico.Microsoft.AspNetCore.StaticWebAssets.props

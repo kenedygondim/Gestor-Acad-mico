@@ -36,7 +36,7 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{professorId}/id")]
         [ProducesResponseType(200, Type = typeof(ProfessorDto))]
-        public async Task<IActionResult> ObterProfessorPeloId(int professorId)
+        public async Task<IActionResult> ObterProfessorPeloId([FromRoute] int professorId)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{nomeDoProfessor}")]
         [ProducesResponseType(200, Type = typeof(ProfessorDto))]
-        public async Task<IActionResult> ObterProfessorPeloNome(string nomeDoProfessor)
+        public async Task<IActionResult> ObterProfessorPeloNome([FromRoute] string nomeDoProfessor)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(ProfessorDto))]
-        public async Task<IActionResult> CriarProfessor(Professor professor)
+        public async Task<IActionResult> CriarProfessor([FromBody] Professor professor)
         {
             try
             {

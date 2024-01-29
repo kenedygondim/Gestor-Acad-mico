@@ -5,24 +5,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gestor_Acadêmico.Repositories
 {
-    public class DisciplinaRepository : IDisciplinaRepository
+    public class DisciplinaRepository(GestorAcademicoContext context) : IDisciplinaRepository
     {
-        private readonly GestorAcademicoContext _context;
+        private readonly GestorAcademicoContext _context = context;
 
-        public DisciplinaRepository(GestorAcademicoContext context)
+        public async Task<IEnumerable<Disciplina>> ObterDisciplinas()
         {
-            _context = context;
-            _context.Database.EnsureCreated();
-        }
-        public async Task<bool> CriarDisciplina(Disciplina disciplina)
-        {
-            await _context.AddAsync(disciplina);
-            return await Save();
+            return await _context.Disciplinas.ToListAsync();
         }
 
         public async Task<Disciplina> ObterDisciplinaPeloId(int disciplinaId)
         {
-            return await _context.Disciplinas.Where(dis => dis.Id == disciplinaId).FirstOrDefaultAsync();
+            return await _context.Disciplinas.FirstOrDefaultAsync(dis => dis.Id == disciplinaId);
         }
 
         public async Task<IEnumerable<Disciplina>> ObterDisciplinaPeloNome(string nomeDaDisciplina)
@@ -30,12 +24,7 @@ namespace Gestor_Acadêmico.Repositories
             return await _context.Disciplinas.Where(dis => dis.NomeDaDisciplina.Contains(nomeDaDisciplina)).ToListAsync();
         }
 
-        public async Task<IEnumerable<Disciplina>> ObterDisciplinas()
-        {
-            return await _context.Disciplinas.ToListAsync();
-        }
-
-        public async Task<IEnumerable<Disciplina>> ObterDisciplinasDoCurso(int? cursoId)
+        public async Task<IEnumerable<Disciplina>> ObterDisciplinasDoCurso(int cursoId)
         {
             return await _context.Disciplinas.Where(dis => dis.CursoId == cursoId).ToListAsync();    
         }
@@ -45,10 +34,10 @@ namespace Gestor_Acadêmico.Repositories
             return await _context.Disciplinas.Where(dis => dis.ProfessorId == professorId).ToListAsync();
         }
 
-        public async Task<bool> Save()
+        public async Task<bool> CriarDisciplina(Disciplina disciplina)
         {
-            var saved = await _context.SaveChangesAsync();
-            return saved > 0;
+            await _context.AddAsync(disciplina);
+            return await Save();
         }
 
         public async Task<bool> AtualizarDisciplina(Disciplina disciplina)
@@ -57,9 +46,10 @@ namespace Gestor_Acadêmico.Repositories
             return await Save();
         }
 
-        public Task ObterDisciplinaPeloId(int? disciplinaId)
+        public async Task<bool> Save()
         {
-            throw new NotImplementedException();
+            var saved = await _context.SaveChangesAsync();
+            return saved > 0;
         }
     }
 }

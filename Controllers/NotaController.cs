@@ -21,10 +21,10 @@ namespace Gestor_Acadêmico.Controllers
         private readonly IAlunoRepository _alunoRepository = alunoRepository;
         private readonly IMapper _mapper = mapper;
 
-
+        //pelo amor de Deus, ajustar esse método
         [HttpPut("{notaId}/atualizar")]
         [ProducesResponseType(200, Type = typeof(NotaDto))]
-        public async Task<IActionResult> AtualizarNota(int notaId, Nota notasRecebidas)
+        public async Task<IActionResult> AtualizarNota([FromRoute] int notaId, [FromBody] Nota notasRecebidas)
         {
             try
             {
@@ -57,19 +57,24 @@ namespace Gestor_Acadêmico.Controllers
 
                 await _NotaRepository.AtualizarNota(nota);
 
-                var aluno = await _alunoRepository.ObterAlunoPeloId((int) nota.AlunoId);
-
-                if (aluno.Notas.Any())
+                try
                 {
-                    var teste = aluno.Notas.Where(not => not.NotasFechadas).ToList();
-                    aluno.IRA = teste.Sum(not => not.MediaGeral) / teste.Count();
+                    var aluno = await _alunoRepository.ObterAlunoPeloId((int)nota.AlunoId);
+
+                    if (aluno.Notas.Any())
+                    {
+                        var teste = aluno.Notas.Where(not => not.NotasFechadas).ToList();
+                        aluno.IRA = teste.Sum(not => not.MediaGeral) / teste.Count();
+                    }
+
+                    await _alunoRepository.AtualizarAluno(aluno);
+
                 }
-                else
+                catch
                 {
-                    aluno.IRA = 0;
+                    return BadRequest("Não foi possível atualizar o IRA do aluno");
                 }
 
-                await _alunoRepository.AtualizarAluno(aluno);
 
                 var notaDto = _mapper.Map<NotaDto>(nota);
 
@@ -80,5 +85,6 @@ namespace Gestor_Acadêmico.Controllers
                 return BadRequest("Não foi possível atualizar nota" + e.Message);
             }
         }
+        ///////////////////////////////////////////////////////////////////////
     }
 }

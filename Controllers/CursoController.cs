@@ -36,7 +36,7 @@ namespace Gestor_Acadêmico.Controllers
 
         [HttpGet("{cursoId}/id")]
         [ProducesResponseType(200, Type = typeof(CursoDto))]
-        public async Task<IActionResult> ObterCursoPeloId(int cursoId)
+        public async Task<IActionResult> ObterCursoPeloId([FromRoute] int cursoId)
         {
             try
             {
@@ -56,8 +56,8 @@ namespace Gestor_Acadêmico.Controllers
         }
 
         [HttpGet("{nomeDoCurso}")]
-        [ProducesResponseType(200, Type = typeof(CursoDto))]
-        public async Task<IActionResult> ObterCursoPeloNome(string nomeDoCurso)
+        [ProducesResponseType(200, Type = typeof(IEnumerable<CursoDto>))]
+        public async Task<IActionResult> ObterCursoPeloNome([FromRoute] string nomeDoCurso)
         {
             try
             {
@@ -66,18 +66,19 @@ namespace Gestor_Acadêmico.Controllers
                 if (curso == null)
                     return NotFound("Curso não encontrado");
 
-                var cursoDto = _mapper.Map<CursoDto>(curso);
+                var cursoDto = _mapper.Map<List<CursoDto>>(curso);
                 return Ok(cursoDto);
             }
+
             catch
             {
-                return BadRequest("Não foi possível recuperar o curso solicitado");
+                return BadRequest($"Não foi possível recuperar o curso solicitado.");
             }
         }
 
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(CursoDto))]
-        public async Task<IActionResult> CriarCurso (Curso curso)
+        public async Task<IActionResult> CriarCurso ([FromBody] Curso curso)
         {
             try
             {
