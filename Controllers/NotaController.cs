@@ -43,7 +43,7 @@ namespace Gestor_Acadêmico.Controllers
                 nota.PrimeiraAvaliacao = notasRecebidas.PrimeiraAvaliacao;
                 nota.SegundaAvaliacao = notasRecebidas.SegundaAvaliacao;
                 nota.Atividades = notasRecebidas.Atividades;
-                nota.MediaGeral = (notasRecebidas.PrimeiraAvaliacao + nota.SegundaAvaliacao + nota.Atividades) / 3;
+                nota.MediaGeral = (decimal)((nota.PrimeiraAvaliacao + nota.SegundaAvaliacao + nota.Atividades) / 3);
                 nota.NotasFechadas = notasRecebidas.NotasFechadas;
 
                 if(nota.NotasFechadas && nota.MediaGeral > 6 && nota.FrequenciaDoAluno > 75)

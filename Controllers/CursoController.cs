@@ -86,13 +86,13 @@ namespace Gestor_Acadêmico.Controllers
                     return BadRequest ("Insira os dados corretamente");
 
                 if(!turnos.Contains(curso.Turno, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest("Insira um turno válido: 'Matutino', 'Vespertino', 'Nortuno' ou 'Integral'");
+                    return BadRequest($"Insira um turno válido: {string.Join(", ", turnos)}");
 
                 if (!categorias.Contains(curso.CategoriaDoCurso, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest("Insira uma categoria válida: 'Tecnólogo', 'Bacharelado', 'Licenciatura', 'Pós-graduação' ou 'Cursos livres'");
+                    return BadRequest($"Insira uma categoria válida: {string.Join(", ", categorias)}");
 
                 if (!modalidades.Contains(curso.Modalidade, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest("Insira uma modalidade válida: 'Presencial', 'EAD', 'Híbrido'");
+                    return BadRequest($"Insira uma modalidade válida: {string.Join(", ", modalidades)}");
 
                 await _cursoRepository.CriarCurso(curso);
 

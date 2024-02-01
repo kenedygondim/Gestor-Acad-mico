@@ -8,7 +8,7 @@ namespace Gestor_Acadêmico.Models
         public int Id { get; set; } 
         public required string PrimeiroNome { get; set; } 
         public required string Sobrenome { get; set; } 
-        public required string NomeCompleto { get ; set ;}
+        public string? NomeCompleto { get ; set ;}
         [Length(10, 10)]
         public required string DataDeNascimento { get; set; } 
         [Length(11, 11)]

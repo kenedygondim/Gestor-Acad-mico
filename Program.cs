@@ -2,13 +2,13 @@ using Gestor_Acadêmico;
 using Gestor_Acadêmico.Context;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Repositories;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //controladores (permite ciclos)
-builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddControllers();
 //dbcontext
 builder.Services.AddDbContext<GestorAcademicoContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddEndpointsApiExplorer();
@@ -26,6 +26,18 @@ builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IDisciplinaRepository, DisciplinaRepository>();
 builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
 builder.Services.AddScoped<IAlunoDisciplinaRepository, AlunoDisciplinaRepository>();
+
+var corsPolicy = new CorsPolicyBuilder()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(_ => true)
+    .AllowCredentials()
+    .Build();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(corsPolicy);
+});
 
 
 var app = builder.Build();
@@ -51,9 +63,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
- app.UseHttpsRedirection();
+app.UseCors();
+
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
 
 app.MapControllers();
 

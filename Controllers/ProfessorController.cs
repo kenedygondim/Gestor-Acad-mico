@@ -15,8 +15,7 @@ namespace Gestor_Acadêmico.Controllers
         private readonly IProfessorRepository _professorRepository = professorRepository;
         private readonly IMapper _mapper = mapper;
 
-        //Array de gêneros para validação
-        readonly string[] generos = ["Masculino", "Feminino", "Outros"];
+        readonly string[] generos = ["Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero", "Transgênero"];
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ProfessorDto>))]
@@ -148,6 +147,6 @@ namespace Gestor_Acadêmico.Controllers
             }
         }
 
-
+       
     }
 }

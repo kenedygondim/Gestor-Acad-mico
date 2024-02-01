@@ -64,8 +64,6 @@ namespace Gestor_Acadêmico.Repositories {
 
         public async Task<bool> AtualizarAluno(Aluno aluno)
         {
-            aluno.NomeCompleto = $"{aluno.PrimeiroNome} {aluno.Sobrenome}";
-
             _context.Update(aluno);
             return await Save();
         }

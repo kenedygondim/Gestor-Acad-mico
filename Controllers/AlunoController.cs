@@ -23,7 +23,7 @@ namespace Gestor_Acadêmico.Controllers
         private readonly IMapper _mapper = mapper;
 
         readonly string[] status = ["Matriculado", "Trancado", "Formado", "Desistente", "Afastado"];
-        readonly string[] generos = ["Masculino", "Feminino", "Outro"];
+        readonly string[] generos = [ "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero", "Transgênero" ];
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<AlunoDto>))]
@@ -128,17 +128,13 @@ namespace Gestor_Acadêmico.Controllers
         {
             Random random = new();
 
-            //Se o usuário tentar enviar os dados em branco ou não inserir os dados corretamente, o método retornará um BadRequest.
             if (aluno == null || !ModelState.IsValid)
                 return BadRequest("Insira os dados corretamente!");
-
-            //Se o usuário tentar inserir um status ou um gênero que não exista, o método retornará um BadRequest.
             if (!status.Contains(aluno.StatusDoAluno, StringComparer.OrdinalIgnoreCase))
-                return BadRequest("Insira uma situação válida: 'Matrículado', 'Trancado', 'Formado', 'Desistente', 'Afastado'");
+                return BadRequest($"Insira uma situação válida: {string.Join(", ", status)}.");
             if (!generos.Contains(aluno.Genero, StringComparer.OrdinalIgnoreCase))
-                return BadRequest("Insira um genêro válida: 'Masculino', 'Feminino', 'Outro'");
+                return BadRequest($"Insira um genêro válido: {string.Join(", ", generos)}.");
 
-            //Primeira tentativa de gerar uma matrícula para o aluno.
             string matriculaGerada = $"SP{random.Next(1000000, 9999999)}";
 
             try
@@ -236,6 +232,67 @@ namespace Gestor_Acadêmico.Controllers
         }
 
 
+        [HttpPost("{alunoId}/rematricular")]
+        [ProducesResponseType(200, Type = typeof(List<Disciplina>))]
+        public async Task<IActionResult> RematriculaDoAluno([FromRoute] int alunoId, [FromBody] List<int> disciplinasIds)
+        {
+            try
+            {
+                var aluno = await _alunoRepository.ObterAlunoPeloId(alunoId);
+                var disciplinasAnteriores = await _alunoDisciplinaRepository.ObterDisciplinasDoAluno(alunoId);
+                var notasDoAluno = await _alunoRepository.ObterNotasDoAluno(alunoId);
+
+                if (aluno == null)
+                    return NotFound("Aluno inexistente");
+
+                if (aluno.StatusDoAluno != "Matriculado")
+                    return BadRequest("O aluno não está matriculado.");
+
+                List<AlunoDisciplina> disciplinasDesejadas = [];
+                List<Nota> gradeDeNotas = [];
+
+                foreach (var disciplinaId in disciplinasIds)
+                {
+                    var disciplina = await _disciplinaRepository.ObterDisciplinaPeloId(disciplinaId);
+
+                    if (disciplina == null)
+                        return NotFound("Disciplina inexistente");
+
+                    var disciplinaJaCursada = disciplinasAnteriores.FirstOrDefault(dis => dis.Id == disciplinaId);
+                    var notaDaDisciplinaJaCursada = notasDoAluno.FirstOrDefault(not => not.DisciplinaId == disciplinaId);
+
+                    if (disciplinaJaCursada != null && (bool)notaDaDisciplinaJaCursada.Aprovado)
+                        return BadRequest($"O aluno já foi aprovado na disciplina: {disciplinaJaCursada.NomeDaDisciplina}");
+
+                    var alunoDisciplina =  new AlunoDisciplina()
+                    {
+                        AlunoId = alunoId,
+                        DisciplinaId = disciplinaId
+                    };
+
+                    var notas = new Nota ()
+                    {
+                        AlunoId = alunoId,
+                        DisciplinaId = disciplinaId
+                    };
+
+
+                    disciplinasDesejadas.Add(alunoDisciplina);
+                    gradeDeNotas.Add(notas);
+                }
+
+                await _alunoDisciplinaRepository.AdicionarAlunoNasDisciplinas(disciplinasDesejadas);
+                await _notaRepository.CriarNotas(gradeDeNotas);
+ 
+                return Ok("Rematrícula realizada com sucesso!");
+            }
+            catch
+            {
+                return BadRequest("Não foi possível efetuar a rematrícula do aluno.");
+            }
+        }
+
+
         [HttpPut("{alunoId}/atualizar")]
         public async Task<IActionResult> AtualizarAluno([FromRoute] int alunoId, [FromBody] Aluno alunoAtualizado)
         {
@@ -252,12 +309,39 @@ namespace Gestor_Acadêmico.Controllers
                 if (aluno.Id != alunoAtualizado.Id)
                     return BadRequest("Ocorreu um erro na validação dos identificadores.");
 
-                if (!generos.Contains(aluno.Genero, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest("Insira um gênero válido: 'Masculino', 'Feminino, 'Outros'");
+                if (!generos.Contains(alunoAtualizado.Genero, StringComparer.OrdinalIgnoreCase))
+                    return BadRequest($"Insira um genêro válido: {string.Join(", ", generos)}.");
 
-                if (!status.Contains(aluno.StatusDoAluno, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest("Insira uma situação válida: 'Matrículado', 'Trancado', 'Formado', 'Desistente', 'Afastado'");
+                if (!status.Contains(alunoAtualizado.StatusDoAluno, StringComparer.OrdinalIgnoreCase))
+                    return BadRequest($"Insira uma situação válida: {string.Join(", ", status)}.");
 
+                if (alunoAtualizado.Matricula != aluno.Matricula)
+                    return BadRequest("O número de matrícula não pode ser alterado.");
+
+                if (alunoAtualizado.Cpf != aluno.Cpf)
+                    return BadRequest("O número de CPF não pode ser alterado.");
+
+                if (alunoAtualizado.CursoId != aluno.CursoId)
+                    return BadRequest("Não é possível alterar o curso!");
+
+                if (alunoAtualizado.PeriodoDeIngresso != aluno.PeriodoDeIngresso)
+                    return BadRequest ("Não é possível alterar o período de ingresso!");
+
+                if (alunoAtualizado.PrimeiroNome == "" || alunoAtualizado.Sobrenome == "")
+                    return BadRequest ("Preencha os campos de primeiro nome e sobrenome!");
+
+                if(alunoAtualizado.DataDeNascimento != aluno.DataDeNascimento)
+                    return BadRequest ("Não é possível alterar a data de nascimento!");
+                
+
+                aluno.PrimeiroNome = alunoAtualizado.PrimeiroNome;
+                aluno.Sobrenome = alunoAtualizado.Sobrenome;
+                aluno.NomeCompleto = $"{aluno.PrimeiroNome} {aluno.Sobrenome}";
+                aluno.Endereco = alunoAtualizado.Endereco;
+                aluno.EnderecoDeEmail = alunoAtualizado.EnderecoDeEmail;
+                aluno.Genero = alunoAtualizado.Genero;
+                aluno.StatusDoAluno = alunoAtualizado.StatusDoAluno;
+  
                 await _alunoRepository.AtualizarAluno(aluno);
 
                 var alunoDto = _mapper.Map<AlunoDto>(aluno);
