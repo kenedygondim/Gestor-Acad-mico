@@ -23,12 +23,20 @@ A API foi desenvolvida para ser consumida por um aplicativo web que será desenv
     "vagasNoPrimeiroSemestre": 0,
     "vagasNoSegundoSemestre": 0,
     "duracaoDoSemestreEmSemanas": 0,
-    "modalidade": "string", // Presencial, Hibrido, EAD
-    "turno": "string", // Matutino, Vespertino, Noturno, Integral
-    "categoriaDoCurso": "string", // Bacharelado, Licenciatura, Tecnólogo
+    "modalidade": "string", 
+    "turno": "string", 
+    "categoriaDoCurso": "string", 
     "cargaHoraria": 0 
 }
 ```
+
+- O campo `quantidadeDeSemestres` é a quantidade de semestres que o curso possui ao todo. 
+- O campo `vagasNoPrimeiroSemestre` e `vagasNoSegundoSemestre` são a quantidade de vagas para ingresso disponíveis para cada semestre. 
+- O campo `duracaoDoSemestreEmSemanas` é a quantidade de semanas que o semestre letivo possui.
+- O campo `modalidade` é a modalidade do curso e deve ser escolhido entre "Presencial", "Hibrido" ou "EAD".
+- O campo `turno` é o turno em que as aulas do curso ocorrem. Deve ser escolhido entre "Matutino", "Vespertino", "Noturno" ou "Integral".
+- O campo `categoriaDoCurso` é a categoria do curso e deve ser escolhido entre "Bacharelado", "Licenciatura" ou "Tecnólogo".
+- O campo `cargaHoraria` é a carga horária do curso.
 
 ## Criação de professores
 
@@ -40,12 +48,17 @@ Para criar um professor, faça uma requisição POST para a rota `/api/professor
     "sobrenome": "string",
     "dataDeNascimento": "01/01/2000",
     "cpf": "string",
-    "genero": "string", // "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero", "Transgênero" 
+    "genero": "string",
     "endereco": "string",
     "enderecoDeEmail": "user@example.com",
     "numeroDeTelefone": "+55 11 99999-9999"
 }
 ```
+
+- O nome completo do aluno será gerado com base no primeiro nome e sobrenome.
+- A data de nascimento deve ser no formato "dd/MM/yyyy".
+- O campo CPF deve ser um número de 11 dígitos, sem pontos ou traços.
+- O campo de genero deve ser escolhido entre "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero" ou "Transgênero".
 
 ## Criação de disciplinas
 
@@ -54,15 +67,20 @@ Para criar uma disciplina, faça uma requisição POST para a rota `/api/discipl
 ```json
 {
     "nomeDaDisciplina": "string",
-    "codigoDaDisciplina": "string", // Ex: SPOMATI para "Sistemas Operacionais e Matemática"
+    "codigoDaDisciplina": "string", 
     "cargaHoraria": 0,
     "aulasPorSemana": 0, 
     "semestreDeReferencia": 0,
-    "situacaoDaDisciplina": "string", // "Em andamento", "Fechada"
+    "situacaoDaDisciplina": "string", 
     "professorId": 0,
     "cursoId": 0
 }
 ```
+
+- O campo `codigoDaDisciplina` deve ter entre 5 e 7 caracteres. Deve servir como abreviação do nome da disciplina. Ex: "MAT2024".
+- O campo `aulasPorSemana` é a quantidade de aulas que a disciplina possui por semana. E cada semestre do curso não pode exceder 25 aulas por semana.
+- O campo `semestreDeReferencia` é o semestre em que a disciplina é ministrada.
+- O campo `situacaoDaDisciplina` é a situação da disciplina e deve ser escolhido entre "Em andamento" ou "Fechada".
 
 ## Criação de alunos
 
@@ -74,12 +92,18 @@ Para criar um aluno, faça uma requisição POST para a rota `/api/aluno` com o 
 	"sobrenome": "string",
 	"dataDeNascimento": "01/01/2000",
 	"cpf": "12345678911",
-	"genero": "string", // "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero", "Transgênero"
+	"genero": "string", 
 	"endereco": "string",
-	"enderecoDeEmail": "
+	"enderecoDeEmail": ""
     "numeroDeTelefone": "+55 11 99999-9999",
     "cursoId": 0
 ```
+
+- O nome completo do aluno será gerado com base no primeiro nome e sobrenome.
+- A data de nascimento deve ser no formato "dd/MM/yyyy".
+- O campo CPF deve ser um número de 11 dígitos, sem pontos ou traços.
+- O campo de genero deve ser escolhido entre "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero" ou "Transgênero".
+- O campo `cursoId` é o Id do curso que o aluno deseja cursar.
 
 Ao criar um aluno, o sistema automaticamente o adiciona nas disciplinas do primeiro semestre do curso escolhido. Além de ser criado a grade de notas para cada disciplina.
 Após as notas se fecharem, o índice de rendimento do aluno é calculado e salvo no banco de dados.
