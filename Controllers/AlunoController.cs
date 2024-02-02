@@ -1,14 +1,20 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using AutoMapper;
+using Gestor_Acadêmico.Context;
 using Gestor_Acadêmico.Dto;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gestor_Acadêmico.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AlunoController(
+        GestorAcademicoContext context,
         IAlunoRepository alunoRepository,
         IAlunoDisciplinaRepository alunoDisciplinaRepository,
         IDisciplinaRepository disciplinaRepository,
@@ -21,9 +27,21 @@ namespace Gestor_Acadêmico.Controllers
         private readonly IDisciplinaRepository _disciplinaRepository = disciplinaRepository;
         private readonly INotaRepository _notaRepository = notaRepository;
         private readonly IMapper _mapper = mapper;
+        private readonly GestorAcademicoContext _context = context;
 
         readonly string[] status = ["Matriculado", "Trancado", "Formado", "Desistente", "Afastado"];
         readonly string[] generos = [ "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero", "Transgênero" ];
+
+        static int anoAtual = DateTime.Now.Year;
+        static int mesAtual = DateTime.Now.Month;
+        static int semestreAtual = (mesAtual <= 6) ? 1 : 2;
+
+        private string GerarMatricula()
+        {
+            Random random = new();
+            return $"SP{random.Next(1000000, 9999999)}";
+        }
+
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<AlunoDto>))]
@@ -126,51 +144,43 @@ namespace Gestor_Acadêmico.Controllers
         [ProducesResponseType(200, Type = typeof(AlunoDto))]
         public async Task<IActionResult> CriarAluno([FromBody] Aluno aluno)
         {
-            Random random = new();
 
             if (aluno == null || !ModelState.IsValid)
                 return BadRequest("Insira os dados corretamente!");
-            if (!status.Contains(aluno.StatusDoAluno, StringComparer.OrdinalIgnoreCase))
+
+            if (!status.Contains(aluno.StatusDoAluno))
                 return BadRequest($"Insira uma situação válida: {string.Join(", ", status)}.");
-            if (!generos.Contains(aluno.Genero, StringComparer.OrdinalIgnoreCase))
+
+            if (!generos.Contains(aluno.Genero))
                 return BadRequest($"Insira um genêro válido: {string.Join(", ", generos)}.");
 
-            string matriculaGerada = $"SP{random.Next(1000000, 9999999)}";
+            string matriculaGerada = GerarMatricula();
+
+            using var dbContextTransaction = _context.Database.BeginTransaction();
 
             try
             {
-                //Verificando se a matrícula gerada já existe no banco de dados.
-                var alunoJaExiste = await _alunoRepository.ObterAlunoPelaMatricula(matriculaGerada);
+                var alunoMatriculado = await _alunoRepository.ObterAlunoPelaMatricula(matriculaGerada);
 
-                //Enquanto a matrícula gerada já existir no banco de dados, o método gerará uma nova matrícula.
-                while (alunoJaExiste != null)
+                while (alunoMatriculado != null)
                 {
-                    matriculaGerada = $"SP{random.Next(1000000, 9999999)}";
-                    alunoJaExiste = await _alunoRepository.ObterAlunoPelaMatricula(matriculaGerada);
+                    matriculaGerada = GerarMatricula();
+                    alunoMatriculado = await _alunoRepository.ObterAlunoPelaMatricula(matriculaGerada);
                 }
 
-                //Quando for encontrado uma matrícula que não exista no banco de dados, a matrícula gerada será atribuída ao aluno.
                 aluno.Matricula = matriculaGerada;
-
-                //Criação do aluno
                 await _alunoRepository.CriarAluno(aluno);
 
-                //Obtendo o aluno criado
-                var alunoCriado = await _alunoRepository.ObterAlunoPelaMatricula(aluno.Matricula);
+                Aluno alunoCriado = await _alunoRepository.ObterAlunoPelaMatricula(aluno.Matricula);
+                IEnumerable<Disciplina> disciplinasDoCurso = await _disciplinaRepository.ObterDisciplinasDoCurso((int) alunoCriado.CursoId);
 
-                //Obtendo as disciplinas do curso do aluno
-                var disciplinasDoCurso = await _disciplinaRepository.ObterDisciplinasDoCurso((int) alunoCriado.CursoId);
+                List<AlunoDisciplina> disciplinasDoAluno = new List<AlunoDisciplina>();
+                List<Nota> notasDoAluno = new List<Nota>();
+                List<Disciplina>  disciplinasDoPrimeiroSemestre = disciplinasDoCurso.Where(dis => dis.SemestreDeReferencia == 1).ToList();
+                
 
-                //Filtrando as disciplinas do primeiro semestre do curso localmente
-                var disciplinasDoPrimeiroSemestre = disciplinasDoCurso.Where(dis => dis.SemestreDeReferencia == 1);
-
-                //Criando uma lista de AlunoDisciplina e uma lista de Nota para o aluno para fins de verificação de erros.
-                List<AlunoDisciplina> disciplinasDoAluno = [];
-                List<Nota> notasDoAluno = [];
-
-                if(disciplinasDoPrimeiroSemestre != null)
+                if (disciplinasDoPrimeiroSemestre.Any())
                 {
-                    //Para cada disciplina do primeiro semestre do curso, será criado um objeto AlunoDisciplina e um objeto Nota.
                     foreach (var disciplina in disciplinasDoPrimeiroSemestre)
                     {
                         AlunoDisciplina alunoDisciplina = new ()
@@ -198,36 +208,29 @@ namespace Gestor_Acadêmico.Controllers
                     }
                 }
 
-                //tentativa de adicionar o aluno nas disciplinas do primeiro semestre do curso.
-                try
-                {
-                    await _alunoDisciplinaRepository.AdicionarAlunoNasDisciplinas(disciplinasDoAluno);
-                }
-                catch (Exception ex)
-                {
-                    await _alunoRepository.DeletarAluno(alunoCriado);
-                    return BadRequest($"Não foi possível adicionar o aluno nas disciplinas. Aluno excluído. Erro: {ex.Message}");
-                }
-
-                //tentativa de criar as notas do aluno.
-                try
-                {
-                    await _notaRepository.CriarNotas(notasDoAluno);
-                }
-                catch (Exception ex)
-                {
-                    await _alunoRepository.DeletarAluno(alunoCriado);
-                    return BadRequest($"Não foi possível criar grade de notas do aluno. Aluno excluído. Erro: {ex.Message}");
-                }
+                await _alunoDisciplinaRepository.AdicionarAlunoNasDisciplinas(disciplinasDoAluno);
+                await _notaRepository.CriarNotas(notasDoAluno);
                 
-                //Se tudo ocorrer bem, será retornado o DTO do aluno criado.
+                dbContextTransaction.Commit();
+             
                 var alunoDto = _mapper.Map<AlunoDto>(aluno);
 
                 return Ok(alunoDto);
             }
-            catch
+            catch (SqlException ex)
             {
-                return BadRequest("Não foi possível adicionar aluno!");
+                dbContextTransaction.Rollback();
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (DbUpdateException ex)
+            {
+                dbContextTransaction.Rollback();
+                return BadRequest($"Ocorreu problemas com uma das operações: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                dbContextTransaction.Rollback();
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
@@ -236,20 +239,29 @@ namespace Gestor_Acadêmico.Controllers
         [ProducesResponseType(200, Type = typeof(List<Disciplina>))]
         public async Task<IActionResult> RematriculaDoAluno([FromRoute] int alunoId, [FromBody] List<int> disciplinasIds)
         {
+            using var dbContextTransaction = _context.Database.BeginTransaction();
+
             try
             {
                 var aluno = await _alunoRepository.ObterAlunoPeloId(alunoId);
-                var disciplinasAnteriores = await _alunoDisciplinaRepository.ObterDisciplinasDoAluno(alunoId);
-                var notasDoAluno = await _alunoRepository.ObterNotasDoAluno(alunoId);
 
                 if (aluno == null)
                     return NotFound("Aluno inexistente");
 
-                if (aluno.StatusDoAluno != "Matriculado")
+                var disciplinasAnteriores = await _alunoDisciplinaRepository.ObterDisciplinasDoAluno(alunoId);
+                var notasDoAluno = await _alunoRepository.ObterNotasDoAluno(alunoId);
+
+                if (aluno.PeriodoDeIngresso == $"{anoAtual}.{semestreAtual}" )
+                    return BadRequest("O aluno não pode ser rematriculado, pois está no primeiro período do curso.");
+
+                if(aluno.StatusDoAluno == "Formado")
+                    return BadRequest("O aluno não pode ser rematriculado, pois já se formou.");
+
+                if (!aluno.StatusDoAluno.Equals("Matriculado", StringComparison.OrdinalIgnoreCase))
                     return BadRequest("O aluno não está matriculado.");
 
-                List<AlunoDisciplina> disciplinasDesejadas = [];
-                List<Nota> gradeDeNotas = [];
+                List<AlunoDisciplina> disciplinasDesejadas = new List<AlunoDisciplina>();
+                List<Nota> gradeDeNotas = new List<Nota>();
 
                 foreach (var disciplinaId in disciplinasIds)
                 {
@@ -264,13 +276,13 @@ namespace Gestor_Acadêmico.Controllers
                     if (disciplinaJaCursada != null && (bool)notaDaDisciplinaJaCursada.Aprovado)
                         return BadRequest($"O aluno já foi aprovado na disciplina: {disciplinaJaCursada.NomeDaDisciplina}");
 
-                    var alunoDisciplina =  new AlunoDisciplina()
+                    var alunoDisciplina = new AlunoDisciplina()
                     {
                         AlunoId = alunoId,
                         DisciplinaId = disciplinaId
                     };
 
-                    var notas = new Nota ()
+                    var notas = new Nota()
                     {
                         AlunoId = alunoId,
                         DisciplinaId = disciplinaId
@@ -283,11 +295,14 @@ namespace Gestor_Acadêmico.Controllers
 
                 await _alunoDisciplinaRepository.AdicionarAlunoNasDisciplinas(disciplinasDesejadas);
                 await _notaRepository.CriarNotas(gradeDeNotas);
- 
+
+                dbContextTransaction.Commit();
+
                 return Ok("Rematrícula realizada com sucesso!");
             }
             catch
             {
+                dbContextTransaction.Rollback();
                 return BadRequest("Não foi possível efetuar a rematrícula do aluno.");
             }
         }
@@ -309,10 +324,10 @@ namespace Gestor_Acadêmico.Controllers
                 if (aluno.Id != alunoAtualizado.Id)
                     return BadRequest("Ocorreu um erro na validação dos identificadores.");
 
-                if (!generos.Contains(alunoAtualizado.Genero, StringComparer.OrdinalIgnoreCase))
+                if (!generos.Contains(alunoAtualizado.Genero))
                     return BadRequest($"Insira um genêro válido: {string.Join(", ", generos)}.");
 
-                if (!status.Contains(alunoAtualizado.StatusDoAluno, StringComparer.OrdinalIgnoreCase))
+                if (!status.Contains(alunoAtualizado.StatusDoAluno))
                     return BadRequest($"Insira uma situação válida: {string.Join(", ", status)}.");
 
                 if (alunoAtualizado.Matricula != aluno.Matricula)
