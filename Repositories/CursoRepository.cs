@@ -9,20 +9,11 @@ namespace Gestor_Acadêmico.Repositories
     {
         private readonly GestorAcademicoContext _context = context;
 
-        public async Task<IEnumerable<Curso>> ObterCursos()
-        {
-            return await _context.Cursos.ToListAsync();
-        }
+        public async Task<IEnumerable<Curso>> ObterCursos() => await _context.Cursos.ToListAsync();
 
-        public async Task<Curso> ObterCursoPeloId(int cursoId)
-        {
-            return await _context.Cursos.FirstOrDefaultAsync(cur => cur.Id == cursoId);
-        }
+        public async Task<Curso> ObterCursoPeloId(int cursoId) => await _context.Cursos.FirstOrDefaultAsync(cur => cur.Id == cursoId);
 
-        public async Task<IEnumerable<Curso>> ObterCursoPeloNome(string nomeDoCurso)
-        {
-            return await _context.Cursos.Where(cur => cur.NomeDoCurso.Contains(nomeDoCurso)).OrderBy(cur=>cur.NomeDoCurso).ToListAsync();
-        }
+        public async Task<IEnumerable<Curso>> ObterCursoPeloNome(string nomeDoCurso) => await _context.Cursos.Where(cur => cur.NomeDoCurso.Contains(nomeDoCurso)).OrderBy(cur => cur.NomeDoCurso).ToListAsync();
 
         public async Task<bool> CriarCurso(Curso curso)
         {

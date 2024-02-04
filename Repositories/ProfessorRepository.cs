@@ -9,20 +9,11 @@ namespace Gestor_Acadêmico.Repositories
     {
         private readonly GestorAcademicoContext _context = context;
 
-        public async Task<IEnumerable<Professor>> ObterProfessores()
-        {
-            return await _context.Professores.ToListAsync();
-        }
+        public async Task<IEnumerable<Professor>> ObterProfessores() => await _context.Professores.ToListAsync();
 
-        public async Task<Professor> ObterProfessorPeloId(int professorId)
-        {
-            return await _context.Professores.FirstOrDefaultAsync(pro => pro.Id == professorId);
-        }
+        public async Task<Professor> ObterProfessorPeloId(int professorId) => await _context.Professores.FirstOrDefaultAsync(pro => pro.Id == professorId);
 
-        public async Task<IEnumerable<Professor>> ObterProfessorPeloNome(string nomeDoProfessor)
-        {
-            return await _context.Professores.Where(pro => pro.NomeCompleto.Contains(nomeDoProfessor)).ToListAsync();
-        }
+        public async Task<IEnumerable<Professor>> ObterProfessorPeloNome(string nomeDoProfessor) => await _context.Professores.Where(pro => pro.NomeCompleto.Contains(nomeDoProfessor)).ToListAsync();
 
         public async Task<bool> CriarProfessor(Professor professor)
         {

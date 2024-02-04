@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using Gestor_Acadêmico.Context;
 using Gestor_Acadêmico.Dto;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Models;
+using Gestor_Acadêmico.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace Gestor_Acadêmico.Controllers
 {
@@ -20,29 +20,43 @@ namespace Gestor_Acadêmico.Controllers
         IDisciplinaRepository disciplinaRepository,
         INotaRepository notaRepository,
         IMapper mapper
-        ) : ControllerBase
+        ) : ControllerBase 
     {
+        private readonly GestorAcademicoContext _context = context;
         private readonly IAlunoRepository _alunoRepository = alunoRepository;
         private readonly IAlunoDisciplinaRepository _alunoDisciplinaRepository = alunoDisciplinaRepository;
         private readonly IDisciplinaRepository _disciplinaRepository = disciplinaRepository;
         private readonly INotaRepository _notaRepository = notaRepository;
-        private readonly IMapper _mapper = mapper;
-        private readonly GestorAcademicoContext _context = context;
+        private readonly IMapper _mapper = mapper;  
 
-        readonly string[] status = ["Matriculado", "Trancado", "Formado", "Desistente", "Afastado"];
-        readonly string[] generos = [ "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero", "Transgênero" ];
+        static readonly string[] status = ["Matriculado", "Trancado", "Formado", "Desistente", "Afastado"];
+        static readonly string[] generos = [ "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero", "Transgênero" ];
+        static readonly string patternCpf = @"(\d{3}\.){2}\d{3}-\d{2}";
+        static readonly string patternEmail = @"([a-z0-9\.\-_]{2,})@([a-z0-9]{2,})(\.[a-z]{2,})?(\.[a-z]{2,})?(\.[a-z]{2,})";
+        static readonly string patternNumeroDeTelefone = @"(\d{2})\s(\d{4,5}-\d{4})";
 
-        static int anoAtual = DateTime.Now.Year;
-        static int mesAtual = DateTime.Now.Month;
-        static int semestreAtual = (mesAtual <= 6) ? 1 : 2;
+        private static string ObterSemestreAtual()
+        {
+            int anoAtual = DateTime.Now.Year;
+            int mesAtual = DateTime.Now.Month;
+            string semestreAtual = (mesAtual <= 6) ? "1" : "2";
+            return $"{anoAtual}.{semestreAtual}";
+        }
 
-        private string GerarMatricula()
+        private static string GerarMatricula()
         {
             Random random = new();
             return $"SP{random.Next(1000000, 9999999)}";
         }
 
+        private static string ObterNomeCompleto(string primeiroNome, string sobrenome) => $"{primeiroNome} {sobrenome}";
+        private static bool ValidarCpf(string cpf) => Regex.IsMatch(cpf, patternCpf);
+        private static bool ValidarEmail(string email) => Regex.IsMatch(email, patternEmail);
+        private static bool ValidarNumeroDeTelefone(string? numeroDeTelefone) => Regex.IsMatch(numeroDeTelefone, patternNumeroDeTelefone);
+        private static bool ValidarGenero(string genero) => generos.Contains(genero);
+        private static bool ValidarStatus(string status) => status.Contains(status);
 
+///////////////////////////////////////////////////////Controllers//////////////////////////////////////////////////////////////
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<AlunoDto>))]
         public async Task<IActionResult> ObterAlunos()
@@ -50,12 +64,18 @@ namespace Gestor_Acadêmico.Controllers
             try
             {
                 var alunos = await _alunoRepository.ObterTodosOsAlunos();
+
                 var alunosDto = _mapper.Map<List<AlunoDto>>(alunos);
+
                 return Ok(alunosDto);
             }
-            catch
+            catch (SqlException ex)
             {
-                return BadRequest("Não foi possível recuperar a lista de alunos");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (Exception ex)
+           {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
@@ -71,31 +91,16 @@ namespace Gestor_Acadêmico.Controllers
                     return NotFound("Aluno não encontrado");
 
                 var alunoDto = _mapper.Map<AlunoDto>(aluno);
+
                 return Ok(alunoDto);
             }
-            catch
+            catch (SqlException ex)
             {
-                return BadRequest("Não foi possível recuperar o aluno solicitado");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
             }
-        }
-
-        [HttpGet("{alunoId}/notas")]
-        [ProducesResponseType(200, Type = typeof(NotaDto))]
-        public async Task<IActionResult> ObterNotasDoAluno([FromRoute] int alunoId)
-        {
-            try
+            catch (Exception ex)
             {
-                var notas = await _alunoRepository.ObterNotasDoAluno(alunoId);
-
-                if (notas == null)
-                    return NotFound("Notas não encontradas");
-
-                var notasDto = _mapper.Map<List<NotaDto>>(notas);
-                return Ok(notasDto);
-            }
-            catch
-            {
-                return BadRequest("Não foi possível recuperar as notas do aluno.");
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
@@ -111,15 +116,20 @@ namespace Gestor_Acadêmico.Controllers
                     return NotFound("Aluno não encontrado");
 
                 var alunoDto = _mapper.Map<List<AlunoDto>>(aluno);
+
                 return Ok(alunoDto);
             }
-            catch
+            catch(SqlException ex)
             {
-                return BadRequest("Não foi possível recuperar o aluno solicitado");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
-        [HttpGet("{alunoId}/id/disciplinas")]
+        [HttpGet("{alunoId}/disciplinas")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<DisciplinaDto>))]
         public async Task<IActionResult> ObterDisciplinasDoAluno([FromRoute] int alunoId)
         {
@@ -133,33 +143,73 @@ namespace Gestor_Acadêmico.Controllers
                 var disciplinaDto = _mapper.Map<List<DisciplinaDto>>(disciplinas);
                 return Ok(disciplinaDto);
             }
-            catch
+            catch(SqlException ex)
             {
-                return BadRequest("Não foi possível recuperar as disciplinas do aluno solicitado");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
-        //Código comentado para maior entendimento.
+        [HttpGet("{alunoId}/notas")]
+        [ProducesResponseType(200, Type = typeof(NotaDto))]
+        public async Task<IActionResult> ObterNotasDoAluno([FromRoute] int alunoId)
+        {
+            try
+            {
+                var notas = await _alunoRepository.ObterNotasDoAluno(alunoId);
+
+                if (notas == null)
+                    return NotFound("Notas não encontradas");
+
+                var notasDto = _mapper.Map<List<NotaDto>>(notas);
+
+                return Ok(notasDto);
+            }
+            catch (SqlException ex)
+            {
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
+            }
+        }
+
+
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(AlunoDto))]
         public async Task<IActionResult> CriarAluno([FromBody] Aluno aluno)
         {
-
             if (aluno == null || !ModelState.IsValid)
                 return BadRequest("Insira os dados corretamente!");
 
-            if (!status.Contains(aluno.StatusDoAluno))
-                return BadRequest($"Insira uma situação válida: {string.Join(", ", status)}.");
-
-            if (!generos.Contains(aluno.Genero))
+            if(!ValidarGenero(aluno.Genero))
                 return BadRequest($"Insira um genêro válido: {string.Join(", ", generos)}.");
 
-            string matriculaGerada = GerarMatricula();
+            if(!ValidarStatus(aluno.StatusDoAluno))
+                return BadRequest($"Insira uma situação válida: {string.Join(", ", status)}.");
 
+            if (!ValidarCpf(aluno.Cpf))
+                return BadRequest("CPF inválido! Padrão desejado: XXX.XXX.XXX-XX");
+
+            if(!ValidarEmail(aluno.EnderecoDeEmail))
+                return BadRequest("Endereço de e-mail inválido!");
+
+            if(!ValidarNumeroDeTelefone(aluno.NumeroDeTelefone))
+                return BadRequest("Número de telefone inválido! Padrão desejado: XX XXXXX-XXXX");
+
+            //Início da transação
             using var dbContextTransaction = _context.Database.BeginTransaction();
 
             try
             {
+
+                //depois: pegar todas as matriculas e fazer uma comparação local
+                string matriculaGerada = GerarMatricula();
+
                 var alunoMatriculado = await _alunoRepository.ObterAlunoPelaMatricula(matriculaGerada);
 
                 while (alunoMatriculado != null)
@@ -168,49 +218,56 @@ namespace Gestor_Acadêmico.Controllers
                     alunoMatriculado = await _alunoRepository.ObterAlunoPelaMatricula(matriculaGerada);
                 }
 
+                //setando propriedades do aluno manualmente para garantir a ordem correta de criação;
                 aluno.Matricula = matriculaGerada;
+                aluno.IRA = 0;
+                aluno.PeriodoDeIngresso = ObterSemestreAtual();
+                aluno.NomeCompleto = ObterNomeCompleto(aluno.PrimeiroNome, aluno.Sobrenome);
+
                 await _alunoRepository.CriarAluno(aluno);
-
-                Aluno alunoCriado = await _alunoRepository.ObterAlunoPelaMatricula(aluno.Matricula);
-                IEnumerable<Disciplina> disciplinasDoCurso = await _disciplinaRepository.ObterDisciplinasDoCurso((int) alunoCriado.CursoId);
-
-                List<AlunoDisciplina> disciplinasDoAluno = new List<AlunoDisciplina>();
-                List<Nota> notasDoAluno = new List<Nota>();
-                List<Disciplina>  disciplinasDoPrimeiroSemestre = disciplinasDoCurso.Where(dis => dis.SemestreDeReferencia == 1).ToList();
                 
+                Aluno alunoCriado = await _alunoRepository.ObterAlunoPelaMatricula(aluno.Matricula);
 
-                if (disciplinasDoPrimeiroSemestre.Any())
+                IEnumerable<Disciplina> disciplinasDoCurso = await _disciplinaRepository.ObterDisciplinasDoCurso((int) alunoCriado.CursoId);
+                List<Disciplina> disciplinasDoPrimeiroSemestre = disciplinasDoCurso.Where(dis => dis.SemestreDeReferencia == 1).ToList();
+
+                List<AlunoDisciplina> listaDeDisciplinasDoAluno = [];
+                List<Nota> listaDeNotasDoAluno = [];
+                
+                if (!disciplinasDoPrimeiroSemestre.Any())
+                    return BadRequest("Não foi possível obter as disciplinas do primeiro semestre do curso.");
+
+                foreach (var disciplina in disciplinasDoPrimeiroSemestre)
                 {
-                    foreach (var disciplina in disciplinasDoPrimeiroSemestre)
+                    AlunoDisciplina alunoDisciplina = new()
                     {
-                        AlunoDisciplina alunoDisciplina = new ()
-                        {
-                            AlunoId = alunoCriado.Id,
-                            DisciplinaId = disciplina.Id
-                        };
+                        AlunoId = alunoCriado.Id,
+                        DisciplinaId = disciplina.Id
+                    };
 
-                        Nota nota = new ()
-                        {
-                            AlunoId = alunoCriado.Id,
-                            DisciplinaId = disciplina.Id,
-                            PrimeiraAvaliacao = 0,
-                            SegundaAvaliacao = 0,
-                            Atividades = 0,
-                            MediaGeral = 0,
-                            FrequenciaDoAluno = 100,
-                            NotasFechadas = false,
-                            Aprovado = false
-                        };
+                    Nota nota = new()
+                    {
+                        AlunoId = alunoCriado.Id,
+                        DisciplinaId = disciplina.Id,
+                        PrimeiraAvaliacao = 0,
+                        SegundaAvaliacao = 0,
+                        Atividades = 0,
+                        MediaGeral = 0,
+                        FrequenciaDoAluno = 100,
+                        NotasFechadas = false,
+                        Aprovado = false
+                    };
 
 
-                        disciplinasDoAluno.Add(alunoDisciplina);
-                        notasDoAluno.Add(nota);
-                    }
+                    listaDeDisciplinasDoAluno.Add(alunoDisciplina);
+                    listaDeNotasDoAluno.Add(nota);
                 }
 
-                await _alunoDisciplinaRepository.AdicionarAlunoNasDisciplinas(disciplinasDoAluno);
-                await _notaRepository.CriarNotas(notasDoAluno);
-                
+                await Task.WhenAll(
+                 _alunoDisciplinaRepository.AdicionarAlunoNasDisciplinas(listaDeDisciplinasDoAluno),
+                 _notaRepository.CriarNotas(listaDeNotasDoAluno)
+                 );
+
                 dbContextTransaction.Commit();
              
                 var alunoDto = _mapper.Map<AlunoDto>(aluno);
@@ -229,9 +286,9 @@ namespace Gestor_Acadêmico.Controllers
             }
             catch (Exception ex)
             {
-                dbContextTransaction.Rollback();
                 return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
+                dbContextTransaction.Rollback();
         }
 
 
@@ -239,19 +296,21 @@ namespace Gestor_Acadêmico.Controllers
         [ProducesResponseType(200, Type = typeof(List<Disciplina>))]
         public async Task<IActionResult> RematriculaDoAluno([FromRoute] int alunoId, [FromBody] List<int> disciplinasIds)
         {
+            var aluno = await _alunoRepository.ObterAlunoPeloId(alunoId);
+
+            if (aluno == null)
+                return NotFound("Aluno inexistente");
+
             using var dbContextTransaction = _context.Database.BeginTransaction();
 
             try
             {
-                var aluno = await _alunoRepository.ObterAlunoPeloId(alunoId);
-
-                if (aluno == null)
-                    return NotFound("Aluno inexistente");
+                
 
                 var disciplinasAnteriores = await _alunoDisciplinaRepository.ObterDisciplinasDoAluno(alunoId);
                 var notasDoAluno = await _alunoRepository.ObterNotasDoAluno(alunoId);
 
-                if (aluno.PeriodoDeIngresso == $"{anoAtual}.{semestreAtual}" )
+                if (aluno.PeriodoDeIngresso == ObterSemestreAtual())
                     return BadRequest("O aluno não pode ser rematriculado, pois está no primeiro período do curso.");
 
                 if(aluno.StatusDoAluno == "Formado")
@@ -260,8 +319,8 @@ namespace Gestor_Acadêmico.Controllers
                 if (!aluno.StatusDoAluno.Equals("Matriculado", StringComparison.OrdinalIgnoreCase))
                     return BadRequest("O aluno não está matriculado.");
 
-                List<AlunoDisciplina> disciplinasDesejadas = new List<AlunoDisciplina>();
-                List<Nota> gradeDeNotas = new List<Nota>();
+                List<AlunoDisciplina> disciplinasDesejadas = [];
+                List<Nota> gradeDeNotas = [];
 
                 foreach (var disciplinaId in disciplinasIds)
                 {

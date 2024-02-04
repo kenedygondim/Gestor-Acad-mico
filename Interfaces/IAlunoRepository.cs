@@ -9,6 +9,7 @@ namespace Gestor_Acadêmico.Interfaces
         Task<Aluno> ObterAlunoPelaMatricula(string matriculaDoAluno);
         Task<IEnumerable<Aluno>> ObterAlunoPeloNome(string nomeDoAluno);
         Task<IEnumerable<Nota>> ObterNotasDoAluno(int alunoId);
+        Task<IEnumerable<string>> ObterTodosOsNumerosDeMatricula();
         Task<bool> CriarAluno(Aluno aluno);
         Task<bool> AtualizarAluno(Aluno aluno);
         Task<bool> DeletarAluno(Aluno aluno);

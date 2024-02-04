@@ -11,7 +11,8 @@ namespace Gestor_Acadêmico.Models
         public string? NomeCompleto { get ; set ;}
         [Length(10, 10)]
         public required string DataDeNascimento { get; set; } 
-        [Length(11, 11)]
+
+        [Length(14, 14)]
         public required string Cpf { get; set; }
         public required string Genero { get; set; } 
         public required string Endereco { get; set; } 

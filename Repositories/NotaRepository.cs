@@ -9,15 +9,9 @@ namespace Gestor_Acadêmico.Repositories
     {
         private readonly GestorAcademicoContext _context = context;
 
-        public async Task<IEnumerable<Nota>> ObterTodasAsNotas()
-        {
-            return await _context.Notas.ToListAsync();
-        }
+        public async Task<IEnumerable<Nota>> ObterTodasAsNotas() => await _context.Notas.ToListAsync();
 
-        public Task<Nota> ObterNotaEspecifica(int notaId)
-        {
-            return _context.Notas.FirstOrDefaultAsync(n => n.Id == notaId);
-        }
+        public async Task<Nota> ObterNotaEspecifica(int notaId) => await _context.Notas.FirstOrDefaultAsync(n => n.Id == notaId);
 
         public async Task<bool> CriarNotas(List<Nota> notas)
         {
