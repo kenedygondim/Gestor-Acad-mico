@@ -12,7 +12,7 @@ namespace Gestor_Acadêmico.Interfaces
         Task<IEnumerable<string>> ObterTodosOsNumerosDeMatricula();
         Task<bool> CriarAluno(Aluno aluno);
         Task<bool> AtualizarAluno(Aluno aluno);
-        Task<bool> DeletarAluno(Aluno aluno);
+        Task<bool> ExcluirAluno(Aluno aluno);
         Task<bool> Save();
     }
 }

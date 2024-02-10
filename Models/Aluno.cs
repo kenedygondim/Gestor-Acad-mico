@@ -5,7 +5,7 @@ namespace Gestor_Acadêmico.Models
     {
         public required string StatusDoAluno { get; set; }
         public decimal? IRA { get; set; }
-        public required int CursoId { get; set; }
+        public int? CursoId { get; set; }
         public string? Matricula { get ; set ; }
         public string? PeriodoDeIngresso { get ; set; }
         public Curso? Curso { get; set; }

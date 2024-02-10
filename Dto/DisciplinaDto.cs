@@ -2,14 +2,14 @@
 {
     public record DisciplinaDto
         (
-        int Id,
-        string NomeDaDisciplina,
-        string CodigoDaDisciplina,
-        decimal CargaHoraria,
-        int AulasPorSemana,
-        int SemestreDeReferencia,
-        string SituacaoDaDisciplina,
-        int? ProfessorId,
-        int? CursoId
+            int Id,
+            string NomeDaDisciplina,
+            string CodigoDaDisciplina,
+            decimal CargaHoraria,
+            int AulasPorSemana,
+            int SemestreDeReferencia,
+            string SituacaoDaDisciplina,
+            int? ProfessorId,
+            int? CursoId
         );
 }

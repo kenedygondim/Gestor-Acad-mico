@@ -33,7 +33,7 @@ namespace Gestor_Acadêmico.Repositories {
             return await Save();
         }
 
-        public async Task<bool> DeletarAluno(Aluno aluno)
+        public async Task<bool> ExcluirAluno(Aluno aluno)
         {
             _context.Remove(aluno);
             return await Save();

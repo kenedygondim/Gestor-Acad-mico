@@ -1,6 +1,7 @@
 ﻿namespace Gestor_Acadêmico.Dto
     {
-        public record CursoDto(
+        public record CursoDto
+        (
             int Id,
             string NomeDoCurso,
             int QuantidadeDeSemestres,
@@ -11,6 +12,6 @@
             string Turno,
             string CategoriaDoCurso,
             decimal CargaHoraria
-        );
+    );
 }
 

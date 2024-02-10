@@ -3,6 +3,7 @@ using Gestor_Acadêmico.Context;
 using Gestor_Acadêmico.Dto;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Models;
+using Gestor_Acadêmico.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -399,7 +400,14 @@ namespace Gestor_Acadêmico.Controllers
                 if (!ValidarStatus(aluno.StatusDoAluno))
                     return BadRequest($"Insira uma situação válida: {string.Join(", ", status)}.");
 
+                aluno.PrimeiroNome = alunoAtualizado.PrimeiroNome;
+                aluno.Sobrenome = alunoAtualizado.Sobrenome;
                 aluno.NomeCompleto = ObterNomeCompleto(aluno.PrimeiroNome, aluno.Sobrenome);
+                aluno.EnderecoDeEmail = alunoAtualizado.EnderecoDeEmail;
+                aluno.NumeroDeTelefone = alunoAtualizado.NumeroDeTelefone;
+                aluno.Endereco = alunoAtualizado.Endereco;
+                aluno.Genero = alunoAtualizado.Genero;
+                aluno.CursoId = alunoAtualizado.CursoId;
 
                 await _alunoRepository.AtualizarAluno(aluno);
 
@@ -411,6 +419,25 @@ namespace Gestor_Acadêmico.Controllers
             catch (Exception ex) 
             {
                 return BadRequest("Não foi possível atualizar as informações do aluno. " + ex.Message);
+            }
+        }
+
+        [HttpDelete("{alunoId}/excluir")]
+        public async Task<IActionResult> ExcluirAluno([FromRoute] int alunoId)
+        {
+            try
+            {
+                var aluno = await _alunoRepository.ObterAlunoPeloId(alunoId);
+
+                if (aluno == null)
+                    return NotFound("Aluno inexistente");
+
+                await _alunoRepository.ExcluirAluno(aluno);
+                return Ok("Aluno excluído!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Não foi possível excluir o aluno. " + ex.Message);
             }
         }
 
