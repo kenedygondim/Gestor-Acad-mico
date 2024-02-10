@@ -1,17 +1,16 @@
 ﻿namespace Gestor_Acadêmico.Dto
-{
-    public class CursoDto
     {
-        public int Id { get; set; }
-        public required string NomeDoCurso { get; set; }
-        public required int QuantidadeDeSemestres { get; set; }
-        public int VagasNoPrimeiroSemestre { get; set; }
-        public int VagasNoSegundoSemestre { get; set; }
-        public required int DuracaoDoSemestreEmSemanas { get; set; }
-        public required string Modalidade { get; set; }
-        public required string Turno { get; set; }
-        public required string CategoriaDoCurso { get; set; }
-        public required decimal CargaHoraria { get; set; }
-    }
+        public record CursoDto(
+            int Id,
+            string NomeDoCurso,
+            int QuantidadeDeSemestres,
+            int VagasNoPrimeiroSemestre,
+            int VagasNoSegundoSemestre,
+            int DuracaoDoSemestreEmSemanas,
+            string Modalidade,
+            string Turno,
+            string CategoriaDoCurso,
+            decimal CargaHoraria
+        );
 }
 

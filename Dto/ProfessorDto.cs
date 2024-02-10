@@ -1,8 +1,16 @@
-﻿using Gestor_Acadêmico.Models;
-namespace Gestor_Acadêmico.Dto
+﻿namespace Gestor_Acadêmico.Dto
 {
-    public class ProfessorDto : Pessoa
-    {
-        
-    }
+    public record ProfessorDto
+        (
+            int Id,
+            string PrimeiroNome,
+            string Sobrenome,
+            string? NomeCompleto,
+            string DataDeNascimento,
+            string Cpf,
+            string Genero,
+            string Endereco,
+            string EnderecoDeEmail,
+            string? NumeroDeTelefone
+        );
 }
