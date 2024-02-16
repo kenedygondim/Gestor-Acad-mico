@@ -2,8 +2,10 @@
 using Gestor_Acadêmico.Dto;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Models;
+using Gestor_Acadêmico.Validation;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gestor_Acadêmico.Controllers
 {
@@ -14,23 +16,27 @@ namespace Gestor_Acadêmico.Controllers
         private readonly ICursoRepository _cursoRepository = cursoRepository;
         private readonly IMapper _mapper = mapper;
 
-        readonly string[] turnos = ["Matutino", "Vespertino", "Noturno", "Integral"];
-        readonly string[] categorias = ["Tecnólogo", "Bacharelado", "Licenciatura", "Pós-graduação", "Cursos livres"];
-        readonly string[] modalidades = ["Presencial", "EAD", "Híbrido"];
-
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<CursoDto>))]
         public async Task<IActionResult> ObterCursos()
         {
             try
             {
-                var cursos = await _cursoRepository.ObterCursos();
-                var cursosDto = _mapper.Map<List<CursoDto>>(cursos);
+                IEnumerable<Curso> cursos = await _cursoRepository.ObterCursos();
+                if (cursos is null)
+                {
+                    return NotFound("Nenhum curso encontrado");
+                }
+                IEnumerable<CursoDto> cursosDto = _mapper.Map<List<CursoDto>>(cursos);
                 return Ok(cursosDto);
             }
-            catch (Exception ex) 
+            catch (SqlException ex)
             {
-                return BadRequest($"Não foi possível recuperar a lista de cursos. Excessão: {ex.Message}");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
@@ -40,18 +46,21 @@ namespace Gestor_Acadêmico.Controllers
         {
             try
             {
-                var curso = await _cursoRepository.ObterCursoPeloId(cursoId);
-
-                if(curso == null)
-                   return NotFound("Curso não encontrado");
-
-
-                var cursoDto = _mapper.Map<CursoDto>(curso);
+                Curso curso = await _cursoRepository.ObterCursoPeloId(cursoId);
+                if(curso is null)
+                {
+                    return NotFound("Curso não encontrado.");
+                }
+                CursoDto cursoDto = _mapper.Map<CursoDto>(curso);
                 return Ok(cursoDto);
             }
-            catch
+            catch (SqlException ex)
             {
-                return BadRequest("Não foi possível recuperar o curso solicitado");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
@@ -61,18 +70,21 @@ namespace Gestor_Acadêmico.Controllers
         {
             try
             {
-                var curso = await _cursoRepository.ObterCursoPeloNome(nomeDoCurso);
-
-                if (curso == null)
+                IEnumerable<Curso> curso = await _cursoRepository.ObterCursoPeloNome(nomeDoCurso);
+                if (curso is null)
+                {
                     return NotFound("Curso não encontrado");
-
-                var cursoDto = _mapper.Map<List<CursoDto>>(curso);
+                }
+                IEnumerable<CursoDto> cursoDto = _mapper.Map<IEnumerable<CursoDto>>(curso);
                 return Ok(cursoDto);
             }
-
-            catch
+            catch (SqlException ex)
             {
-                return BadRequest($"Não foi possível recuperar o curso solicitado.");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
@@ -80,69 +92,61 @@ namespace Gestor_Acadêmico.Controllers
         [ProducesResponseType(200, Type = typeof(CursoDto))]
         public async Task<IActionResult> CriarCurso ([FromBody] Curso curso)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Insira os dados corretamente");
+
             try
             {
-                if(curso == null || !ModelState.IsValid)
-                    return BadRequest ("Insira os dados corretamente");
-
-                if(!turnos.Contains(curso.Turno, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest($"Insira um turno válido: {string.Join(", ", turnos)}");
-
-                if (!categorias.Contains(curso.CategoriaDoCurso, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest($"Insira uma categoria válida: {string.Join(", ", categorias)}");
-
-                if (!modalidades.Contains(curso.Modalidade, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest($"Insira uma modalidade válida: {string.Join(", ", modalidades)}");
-
+                if (!CursoValidation.ValidarCriacaoDoCurso(curso, out string errorMessage))
+                {
+                    return BadRequest(errorMessage);
+                }
                 await _cursoRepository.CriarCurso(curso);
-
-                var cursoDto = _mapper.Map<CursoDto>(curso);
-
+                CursoDto cursoDto = _mapper.Map<CursoDto>(curso);
                 return Ok(cursoDto);
             }
-            catch 
+            catch (SqlException ex)
             {
-                return BadRequest("Não foi possível criar o curso.");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest($"Ocorreu problemas com uma das operações: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
-        
-
         [HttpPut("{cursoId}/atualizar")]
         public async Task<IActionResult> AtualizarCurso([FromRoute] int cursoId, [FromBody] Curso cursoAtualizado)
-        { 
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Reveja os dados inseridos");
+
             try
             {
-                var curso = await _cursoRepository.ObterCursoPeloId(cursoId);
-
-                if (curso == null)
-                    return NotFound("Curso inexistente");
-
-                if (!ModelState.IsValid) 
-                    return BadRequest("Reveja os dados inseridos");
-
-                if (curso.Id != cursoAtualizado.Id)
-                    return BadRequest("Ocorreu um erro na validação dos identificadores.");
-
-                if(!turnos.Contains(cursoAtualizado.Turno, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest("Insira um turno válido: 'Matutino', 'Vespertino', 'Nortuno' ou 'Integral'");
-
-                if (!categorias.Contains(cursoAtualizado.CategoriaDoCurso, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest("Insira uma categoria válida: 'Tecnólogo', 'Bacharelado', 'Licenciatura', 'Pós-graduação' ou 'Cursos livres'");
-
-                if (!modalidades.Contains(cursoAtualizado.Modalidade, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest("Insira uma modalidade válida: 'Presencial', 'EAD', 'Híbrido'");
-
+                Curso curso = await _cursoRepository.ObterCursoPeloId(cursoId);
+                if (!CursoValidation.ValidarAtualizacaoDoCurso(curso, cursoAtualizado, out string errorMessage))
+                {
+                    return BadRequest(errorMessage);
+                }
                 await _cursoRepository.AtualizarCurso(curso);
-
-                var cursoDto = _mapper.Map<CursoDto>(curso);
-
-                return Ok("Curso alterado com sucesso!");
+                CursoDto cursoDto = _mapper.Map<CursoDto>(curso);
+                return Ok("Curso atualizado com sucesso!");
             }
-
-            catch
+            catch (SqlException ex)
             {
-                return BadRequest("Não foi possível atualizar o curso");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest($"Ocorreu problemas com uma das operações: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
     }

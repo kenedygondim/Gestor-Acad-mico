@@ -21,7 +21,6 @@ namespace Gestor_Acadêmico.Controllers
         private readonly IAlunoRepository _alunoRepository = alunoRepository;
         private readonly IMapper _mapper = mapper;
 
-        //pelo amor de Deus, ajustar esse método
         [HttpPut("{notaId}/atualizar")]
         [ProducesResponseType(200, Type = typeof(NotaDto))]
         public async Task<IActionResult> AtualizarNota([FromRoute] int notaId, [FromBody] Nota notasRecebidas)
