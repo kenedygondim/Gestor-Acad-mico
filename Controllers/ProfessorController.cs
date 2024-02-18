@@ -6,6 +6,8 @@ using Gestor_Acadêmico.Repositories;
 using Gestor_Acadêmico.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 
 namespace Gestor_Acadêmico.Controllers
@@ -23,13 +25,21 @@ namespace Gestor_Acadêmico.Controllers
         {
             try
             {
-                var professores = await _professorRepository.ObterProfessores();
-                var professorsDto = _mapper.Map<List<ProfessorDto>>(professores);
+                IEnumerable<Professor> professores = await _professorRepository.ObterProfessores();
+                if (professores is null)
+                {
+                    return NotFound("Nenhum professor encontrado");
+                }
+                IEnumerable<ProfessorDto> professorsDto = _mapper.Map<IEnumerable<ProfessorDto>>(professores);
                 return Ok(professorsDto);
             }
-            catch
+            catch (SqlException ex)
             {
-                return BadRequest($"Não foi possível recuperar a lista de professores.");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
@@ -39,38 +49,45 @@ namespace Gestor_Acadêmico.Controllers
         {
             try
             {
-                var professor = await _professorRepository.ObterProfessorPeloId(professorId);
-
-                if (professor == null)
+                Professor professor = await _professorRepository.ObterProfessorPeloId(professorId);
+                if (professor is null)
+                {
                     return NotFound("Professor não encontrado");
-
-
-                var professorDto = _mapper.Map<ProfessorDto>(professor);
+                }
+                ProfessorDto professorDto = _mapper.Map<ProfessorDto>(professor);
                 return Ok(professorDto);
             }
-            catch
+            catch (SqlException ex)
             {
-                return BadRequest("Não foi possível recuperar o professor solicitado");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
         [HttpGet("{nomeDoProfessor}")]
-        [ProducesResponseType(200, Type = typeof(List<ProfessorDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ProfessorDto>))]
         public async Task<IActionResult> ObterProfessorPeloNome([FromRoute] string nomeDoProfessor)
         {
             try
             {
-                var professor = await _professorRepository.ObterProfessorPeloNome(nomeDoProfessor);
-
-                if (professor == null)
+                IEnumerable<Professor> professor = await _professorRepository.ObterProfessorPeloNome(nomeDoProfessor);
+                if (professor is null)
+                {
                     return NotFound("Professor não encontrado");
-
-                var professorDto = _mapper.Map<List<ProfessorDto>>(professor);
+                }
+                IEnumerable<ProfessorDto> professorDto = _mapper.Map<IEnumerable<ProfessorDto>>(professor);
                 return Ok(professorDto);
             }
-            catch
+            catch (SqlException ex)
             {
-                return BadRequest("Não foi possível recuperar o professor solicitado");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
@@ -83,18 +100,24 @@ namespace Gestor_Acadêmico.Controllers
 
             if (!ProfessorValidation.ValidarCriacaoDoProfessor(professor, out string errorMessage))
                 return BadRequest(errorMessage);
-            
+     
             try
             {
                 await _professorRepository.CriarProfessor(professor);
-
-                var professorDto = _mapper.Map<ProfessorDto>(professor);
-
+                ProfessorDto professorDto = _mapper.Map<ProfessorDto>(professor);
                 return Ok(professorDto);
             }
-            catch
+            catch (SqlException ex)
             {
-                return BadRequest("Não foi possível adicionar o professor");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest($"Ocorreu problemas com uma das operações: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
@@ -106,21 +129,26 @@ namespace Gestor_Acadêmico.Controllers
 
             try
             {
-                var professor = await _professorRepository.ObterProfessorPeloId(professorId);
-
-                if(!ProfessorValidation.ValidarAtualizacaoDoProfessor(professor, professorAtualizado, out string errorMessage)) 
+                Professor professor = await _professorRepository.ObterProfessorPeloId(professorId);
+                if(!ProfessorValidation.ValidarAtualizacaoDoProfessor(professor, professorAtualizado, out string errorMessage))
+                {
                     return BadRequest(errorMessage);
-
+                }
                 await _professorRepository.AtualizarProfessor(professor);
-
-                var professorDto = _mapper.Map<ProfessorDto>(professor);
-
-                return Ok("Informações alteradas com sucesso!");
+                ProfessorDto professorDto = _mapper.Map<ProfessorDto>(professor);
+                return Ok("Informações atualizadas com sucesso!");
             }
-
-            catch (Exception e)
+            catch (SqlException ex)
             {
-                return BadRequest($"Não foi possível atualizar as informações do professor {e.Message}");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest($"Ocorreu problemas com uma das operações: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 
@@ -129,17 +157,25 @@ namespace Gestor_Acadêmico.Controllers
         {
             try
             {
-                var professor = await _professorRepository.ObterProfessorPeloId(professorId);
-
-                if (professor == null)
+                Professor professor = await _professorRepository.ObterProfessorPeloId(professorId);
+                if (professor is null)
+                {
                     return NotFound("Professor inexistente");
-
+                }
                 await _professorRepository.ExcluirProfessor(professor);
                 return Ok("Professor excluído!");
             }
-            catch
+            catch (SqlException ex)
             {
-                return BadRequest("Não foi possível excluir  o professor");
+                return BadRequest($"Ocorreu um erro de servidor: {ex.Message}");
+            }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest($"Ocorreu problemas com uma das operações: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
         }
 

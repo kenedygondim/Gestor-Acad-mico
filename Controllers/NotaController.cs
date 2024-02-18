@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Gestor_Acadêmico.Context;
 using Gestor_Acadêmico.Dto;
 using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Models;
+using Gestor_Acadêmico.Validation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gestor_Acadêmico.Controllers
 {
@@ -13,77 +16,55 @@ namespace Gestor_Acadêmico.Controllers
         INotaRepository NotaRepository,
         IAlunoRepository alunoRepository,
         IDisciplinaRepository disciplinaRepository,
+        GestorAcademicoContext context,
         IMapper mapper
         ) 
         : ControllerBase
     {
         private readonly INotaRepository _NotaRepository = NotaRepository;
         private readonly IAlunoRepository _alunoRepository = alunoRepository;
+        private readonly GestorAcademicoContext _context = context;
         private readonly IMapper _mapper = mapper;
 
         [HttpPut("{notaId}/atualizar")]
         [ProducesResponseType(200, Type = typeof(NotaDto))]
         public async Task<IActionResult> AtualizarNota([FromRoute] int notaId, [FromBody] Nota notasRecebidas)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Insira os dados corretamente!");
+                using var dbContextTransaction = _context.Database.BeginTransaction();
+
             try
             {
-                if (notaId != notasRecebidas.Id)
-                    return BadRequest("Id da nota não encontrado");
+                Nota nota = await _NotaRepository.ObterNotaEspecifica(notasRecebidas.Id);
 
-                if (notasRecebidas == null || !ModelState.IsValid )
-                    return BadRequest("Insira os dados corretamente");
-
-                var nota = await _NotaRepository.ObterNotaEspecifica(notasRecebidas.Id);
-
-                if (nota == null)
-                    return BadRequest("Notas não encontradas");
-
-                nota.FrequenciaDoAluno = notasRecebidas.FrequenciaDoAluno;
-                nota.PrimeiraAvaliacao = notasRecebidas.PrimeiraAvaliacao;
-                nota.SegundaAvaliacao = notasRecebidas.SegundaAvaliacao;
-                nota.Atividades = notasRecebidas.Atividades;
-                nota.MediaGeral = (decimal)((nota.PrimeiraAvaliacao + nota.SegundaAvaliacao + nota.Atividades) / 3);
-                nota.NotasFechadas = notasRecebidas.NotasFechadas;
-
-                if(nota.NotasFechadas && nota.MediaGeral > 6 && nota.FrequenciaDoAluno > 75)
+                if (!NotaValidation.ValidarAtualizacaoDaNota(nota, notasRecebidas, out string errorMessage))
                 {
-                    nota.Aprovado = true;
-                } 
-                else
-                {
-                    nota.Aprovado = false;
-                }    
+                    return BadRequest(errorMessage);
+                }
 
                 await _NotaRepository.AtualizarNota(nota);
 
-                try
+                Aluno aluno = await _alunoRepository.ObterAlunoPeloId(nota.AlunoId);
+
+
+                if (aluno.Notas.Any())
                 {
-                    var aluno = await _alunoRepository.ObterAlunoPeloId((int)nota.AlunoId);
-
-                    if (aluno.Notas.Any())
-                    {
-                        var teste = aluno.Notas.Where(not => not.NotasFechadas).ToList();
-                        aluno.IRA = teste.Sum(not => not.MediaGeral) / teste.Count();
-                    }
-
-                    await _alunoRepository.AtualizarAluno(aluno);
-
-                }
-                catch
-                {
-                    return BadRequest("Não foi possível atualizar o IRA do aluno");
+                    var teste = aluno.Notas.Where(not => not.NotasFechadas).ToList();
+                    aluno.IRA = teste.Sum(not => not.MediaGeral) / teste.Count();
                 }
 
-
-                var notaDto = _mapper.Map<NotaDto>(nota);
+               await _alunoRepository.AtualizarAluno(aluno);
+               NotaDto notaDto = _mapper.Map<NotaDto>(nota);
+                dbContextTransaction.Commit();
 
                 return Ok(notaDto);
             }
             catch (Exception e)
             {
+                dbContextTransaction.Rollback();
                 return BadRequest("Não foi possível atualizar nota" + e.Message);
             }
         }
-        ///////////////////////////////////////////////////////////////////////
     }
 }

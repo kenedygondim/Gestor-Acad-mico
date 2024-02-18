@@ -11,7 +11,7 @@ namespace Gestor_Acadêmico.Repositories {
 
         public async Task<IEnumerable<Aluno>> ObterTodosOsAlunos() => await _context.Alunos.ToListAsync();
 
-        public async Task<Aluno> ObterAlunoPeloId(int alunoId) => await _context.Alunos.FirstOrDefaultAsync(alu => alu.Id == alunoId);
+        public async Task<Aluno> ObterAlunoPeloId(int alunoId) => await _context.Alunos.Where(alu => alu.Id == alunoId).Include(x => x.Notas).FirstOrDefaultAsync();
 
         public async Task<IEnumerable<Aluno>> ObterAlunoPeloNome(string nomeDoAluno) => await _context.Alunos.Where(alu => alu.NomeCompleto.Contains(nomeDoAluno)).OrderBy(alu => alu.NomeCompleto).ToListAsync();
 

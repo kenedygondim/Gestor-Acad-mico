@@ -18,15 +18,15 @@ A API foi desenvolvida para ser consumida por um aplicativo web que será desenv
 
 ```json
 {
-	"nomeDoCurso": "string",
-    "quantidadeDeSemestres": 0,
-    "vagasNoPrimeiroSemestre": 0,
-    "vagasNoSegundoSemestre": 0,
-    "duracaoDoSemestreEmSemanas": 0,
-    "modalidade": "string", 
-    "turno": "string", 
-    "categoriaDoCurso": "string", 
-    "cargaHoraria": 0 
+	"nomeDoCurso": "Análise e Desenvolvimento de Sistemas",
+    "quantidadeDeSemestres": 6,
+    "vagasNoPrimeiroSemestre": 40,
+    "vagasNoSegundoSemestre": 40,
+    "duracaoDoSemestreEmSemanas": 19,
+    "modalidade": "Presencial", 
+    "turno": "Noturno", 
+    "categoriaDoCurso": "Técnologo", 
+    "cargaHoraria": 2000 
 }
 ```
 
@@ -36,7 +36,7 @@ A API foi desenvolvida para ser consumida por um aplicativo web que será desenv
 - O campo `modalidade` é a modalidade do curso e deve ser escolhido entre "Presencial", "Hibrido" ou "EAD".
 - O campo `turno` é o turno em que as aulas do curso ocorrem. Deve ser escolhido entre "Matutino", "Vespertino", "Noturno" ou "Integral".
 - O campo `categoriaDoCurso` é a categoria do curso e deve ser escolhido entre "Bacharelado", "Licenciatura" ou "Tecnólogo".
-- O campo `cargaHoraria` é a carga horária do curso.
+- O campo `cargaHoraria` é a carga horária do curso em horas.
 
 ## Criação de professores
 
@@ -44,12 +44,12 @@ Para criar um professor, faça uma requisição POST para a rota `/api/professor
 
 ```json
 {
-	"primeiroNome": "string",
-    "sobrenome": "string",
+	"primeiroNome": "John",
+    "sobrenome": "Doe",
     "dataDeNascimento": "01/01/2000",
-    "cpf": "string",
-    "genero": "string",
-    "endereco": "string",
+    "cpf": "000.000.000-00",
+    "genero": "Masculino",
+    "endereco": "Rua das Laranjeiras, 140 - São Gonçalo, RJ",
     "enderecoDeEmail": "user@example.com",
     "numeroDeTelefone": "+55 11 99999-9999"
 }
@@ -57,7 +57,7 @@ Para criar um professor, faça uma requisição POST para a rota `/api/professor
 
 - O nome completo do aluno será gerado com base no primeiro nome e sobrenome.
 - A data de nascimento deve ser no formato "dd/MM/yyyy".
-- O campo CPF deve ser um número de 11 dígitos, sem pontos ou traços.
+- O campo CPF deve ser um número de 14 dígitos, no padrão "000.000.000-00".
 - O campo de genero deve ser escolhido entre "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero" ou "Transgênero".
 
 ## Criação de disciplinas
@@ -66,14 +66,14 @@ Para criar uma disciplina, faça uma requisição POST para a rota `/api/discipl
 
 ```json
 {
-    "nomeDaDisciplina": "string",
-    "codigoDaDisciplina": "string", 
-    "cargaHoraria": 0,
-    "aulasPorSemana": 0, 
-    "semestreDeReferencia": 0,
-    "situacaoDaDisciplina": "string", 
-    "professorId": 0,
-    "cursoId": 0
+    "nomeDaDisciplina": "Lógica de Programação",
+    "codigoDaDisciplina": "LOGPRO1", 
+    "cargaHoraria": 80,
+    "aulasPorSemana": 5, 
+    "semestreDeReferencia": 1,
+    "situacaoDaDisciplina": "Em andamento", 
+    "professorId": 1,
+    "cursoId": 1
 }
 ```
 
@@ -88,15 +88,17 @@ Para criar um aluno, faça uma requisição POST para a rota `/api/aluno` com o 
 
 ```json
 {
-	"primeiroNome": "string",
-	"sobrenome": "string",
-	"dataDeNascimento": "01/01/2000",
-	"cpf": "12345678911",
-	"genero": "string", 
-	"endereco": "string",
-	"enderecoDeEmail": ""
+	"primeiroNome": "John",
+    "sobrenome": "Doe",
+    "dataDeNascimento": "01/01/2000",
+    "cpf": "000.000.000-00",
+    "genero": "Masculino",
+    "endereco": "Rua das Laranjeiras, 140 - São Gonçalo, RJ",
+    "enderecoDeEmail": "user@example.com",
     "numeroDeTelefone": "+55 11 99999-9999",
-    "cursoId": 0
+    "cursoId": 1,
+    "statusDoAluno": "Matriculado"
+}
 ```
 
 - O nome completo do aluno será gerado com base no primeiro nome e sobrenome.
@@ -107,6 +109,33 @@ Para criar um aluno, faça uma requisição POST para a rota `/api/aluno` com o 
 
 Ao criar um aluno, o sistema automaticamente o adiciona nas disciplinas do primeiro semestre do curso escolhido. Além de ser criado a grade de notas para cada disciplina.
 Após as notas se fecharem, o índice de rendimento do aluno é calculado e salvo no banco de dados.
+
+## Alteração de notas
+
+Para alterar as notas de um aluno, faça uma requisição PUT para a rota `/api/nota/{notaId}/atualizar` com o seguinte padrão:
+
+```json
+{
+    "id": 5018, 
+    "frequenciaDoAluno": 100,
+    "primeiraAvaliacao": 10,
+    "segundaAvaliacao": 7,
+    "atividades": 5,
+    "alunoId": 1,
+    "disciplinaId": 1,
+    "notasFechadas": false,
+}
+```
+
+- O campo `frequenciaDoAluno` é a frequência do aluno na disciplina que varia de 0 a 100.
+- O campo `primeiraAvaliacao` é a nota da primeira avaliação do aluno na disciplina que varia de 0 a 10.
+- O campo `segundaAvaliacao` é a nota da segunda avaliação do aluno na disciplina que varia de 0 a 10.
+- O campo `atividades` é a nota das atividades do aluno na disciplina que varia de 0 a 10.
+- O campo `alunoId` é o Id do aluno.
+- O campo `disciplinaId` é o Id da disciplina em que a grade de nota está associada.
+- O campo `notasFechadas` é um booleano que indica se as notas da disciplina estão fechadas ou não.
+
+Ao inserir as notas, o sistema automaticamente calcula a média final do aluno e verifica se ele foi aprovado ou não. O sistema também atualizará o índice de rendimento do aluno após o fechamento das notas.
 
 ## Sistema de rematrícula
 
@@ -129,5 +158,3 @@ Cada disciplina será verificada se o aluno já a cursou ou não. Caso o aluno j
 O sistema de notas é feito automaticamente na medida que o aluno se matricular nas disciplinas. O sistema cria uma grade de notas para cada disciplina que o aluno se matricular. O aluno pode ver suas notas e o índice de rendimento no sistema.
 
 Com autenticações e autorizações, o professor responsável pela disciplina poderá lançar as notas do aluno no sistema, e com base nessas notas será calculado a média final e se ocorreu a aprovação.
-
-... documentação em construção
