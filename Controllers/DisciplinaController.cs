@@ -148,7 +148,7 @@ namespace Gestor_Acadêmico.Controllers
 
             try
             {
-                IEnumerable<Disciplina> disciplinasDoCurso = await _disciplinaRepository.ObterDisciplinasDoCurso(disciplina.CursoId);
+                IEnumerable<Disciplina> disciplinasDoCurso = await _disciplinaRepository.ObterDisciplinasDoCurso((int)disciplina.CursoId);
                 IEnumerable<Disciplina> disciplinasDoSemestreDeReferencia = disciplinasDoCurso.Where(dis => dis.SemestreDeReferencia == disciplina.SemestreDeReferencia);
                 int contagem = disciplinasDoSemestreDeReferencia.Sum(a => a.AulasPorSemana) + disciplina.AulasPorSemana; 
                 if(contagem > 25)

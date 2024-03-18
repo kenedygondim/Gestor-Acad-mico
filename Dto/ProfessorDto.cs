@@ -2,15 +2,24 @@
 {
     public record ProfessorDto
         (
-            int Id,
+            string Prontuario,
             string PrimeiroNome,
             string Sobrenome,
-            string? NomeCompleto,
             string DataDeNascimento,
+            string CidadeDeNascimento,
+            string EstadoDeNascimento,
+            string PaisDeNascimento,
             string Cpf,
+            string CEP,
             string Genero,
-            string Endereco,
-            string EnderecoDeEmail,
-            string? NumeroDeTelefone
+            string Bairro,
+            string Rua,
+            string Numero,
+            string Complemento,
+            string Cidade,
+            string Email,
+            string NumeroDeTelefone
+
         );
 }
+

@@ -6,10 +6,11 @@ namespace Gestor_Acadêmico.Interfaces
     {
         Task<IEnumerable<Aluno>> ObterTodosOsAlunos();
         Task<Aluno> ObterAlunoPeloId(int alunoId);
-        Task<Aluno> ObterAlunoPelaMatricula(string matriculaDoAluno);
+        Task<Aluno> ObterAlunoPeloProntuario(string matriculaDoAluno);
         Task<IEnumerable<Aluno>> ObterAlunoPeloNome(string nomeDoAluno);
+        Task<IEnumerable<Aluno>> ObterAlunoPeloNomeComposto(string primeiroNome, string sobrenome);
         Task<IEnumerable<Nota>> ObterNotasDoAluno(int alunoId);
-        Task<IEnumerable<string>> ObterTodosOsNumerosDeMatricula();
+        Task<IEnumerable<string>> ObterProntuarios();
         Task<bool> CriarAluno(Aluno aluno);
         Task<bool> AtualizarAluno(Aluno aluno);
         Task<bool> ExcluirAluno(Aluno aluno);

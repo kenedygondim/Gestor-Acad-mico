@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Gestor_Acadêmico.Validation;
+using System.Collections.Generic;
 
 namespace Gestor_Acadêmico.Controllers
 {
@@ -26,9 +27,9 @@ namespace Gestor_Acadêmico.Controllers
         private readonly IAlunoDisciplinaRepository _alunoDisciplinaRepository = alunoDisciplinaRepository;
         private readonly IDisciplinaRepository _disciplinaRepository = disciplinaRepository;
         private readonly INotaRepository _notaRepository = notaRepository;
-        private readonly IMapper _mapper = mapper;  
+        private readonly IMapper _mapper = mapper;
+        private static readonly char[] separator = [' '];
 
-      
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<AlunoDto>))]
         public async Task<IActionResult> ObterAlunos()
@@ -81,9 +82,25 @@ namespace Gestor_Acadêmico.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<AlunoDto>))]
         public async Task<IActionResult> ObterAlunoPeloNome([FromRoute] string nomeDoAluno)
         {
+            IEnumerable<Aluno> aluno = new List<Aluno>();
+
+
             try
             {
-                IEnumerable<Aluno> aluno = await _alunoRepository.ObterAlunoPeloNome(nomeDoAluno);
+                if (nomeDoAluno.Contains(' '))
+                {
+                    string[] partesDoNome = nomeDoAluno.Split(separator, 2);
+                    string primeiroNome = partesDoNome[0];
+                    string sobrenomes = partesDoNome[1];
+                    List<string> nomes = [.. nomeDoAluno.Split(' ')];
+
+                    aluno = await _alunoRepository.ObterAlunoPeloNomeComposto(nomes[0], nomes[1]);
+                }
+                else
+                {
+                    aluno = await _alunoRepository.ObterAlunoPeloNome(nomeDoAluno);
+                }
+
                 if (aluno is null)
                 {
                     return NotFound("Aluno não encontrado");
@@ -160,13 +177,15 @@ namespace Gestor_Acadêmico.Controllers
 
             try
             {
-                IEnumerable<string> matriculasEmUso = await _alunoRepository.ObterTodosOsNumerosDeMatricula();
-                if (!AlunoValidator.ValidarCriacaoDoAluno(aluno, matriculasEmUso, out string errorMessage))
+                IEnumerable<string> prontuariosEmUso = await _alunoRepository.ObterProntuarios();
+
+                if (!AlunoValidator.ValidarCriacaoDoAluno(aluno, prontuariosEmUso, out string errorMessage))
                 {
                     return BadRequest(errorMessage);
                 }
+
                 await _alunoRepository.CriarAluno(aluno);          
-                Aluno alunoCriado = await _alunoRepository.ObterAlunoPelaMatricula(aluno.Matricula);
+                Aluno alunoCriado = await _alunoRepository.ObterAlunoPeloProntuario(aluno.Prontuario);
 
                 IEnumerable<Disciplina> disciplinasDoCurso = await _disciplinaRepository.ObterDisciplinasDoCurso((int) alunoCriado.CursoId);
                 IEnumerable<Disciplina> disciplinasDoPrimeiroSemestre = disciplinasDoCurso.Where(dis => dis.SemestreDeReferencia == 1).ToList();

@@ -67,7 +67,7 @@ namespace Gestor_Acadêmico.Controllers
             }
         }
 
-        [HttpGet("{nomeDoProfessor}")]
+        /*[HttpGet("{nomeDoProfessor}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ProfessorDto>))]
         public async Task<IActionResult> ObterProfessorPeloNome([FromRoute] string nomeDoProfessor)
         {
@@ -89,7 +89,7 @@ namespace Gestor_Acadêmico.Controllers
             {
                 return BadRequest($"Ocorreu um erro inesperado: {ex.Message}");
             }
-        }
+        }*/
 
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(ProfessorDto))]
@@ -98,7 +98,10 @@ namespace Gestor_Acadêmico.Controllers
             if(!ModelState.IsValid)
                 return BadRequest("Reveja os dados inseridos");
 
-            if (!ProfessorValidation.ValidarCriacaoDoProfessor(professor, out string errorMessage))
+            var prontuariosEmUso = await _professorRepository.ObterProntuarios();
+
+
+            if (!ProfessorValidation.ValidarCriacaoDoProfessor(professor, prontuariosEmUso,  out string errorMessage))
                 return BadRequest(errorMessage);
      
             try

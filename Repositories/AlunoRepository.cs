@@ -13,13 +13,16 @@ namespace Gestor_Acadêmico.Repositories {
 
         public async Task<Aluno> ObterAlunoPeloId(int alunoId) => await _context.Alunos.Where(alu => alu.Id == alunoId).Include(x => x.Notas).FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<Aluno>> ObterAlunoPeloNome(string nomeDoAluno) => await _context.Alunos.Where(alu => alu.NomeCompleto.Contains(nomeDoAluno)).OrderBy(alu => alu.NomeCompleto).ToListAsync();
+        public async Task<IEnumerable<Aluno>> ObterAlunoPeloNome(string nomeDoAluno) => await _context.Alunos.Where(alu => alu.PrimeiroNome.Contains(nomeDoAluno) || alu.Sobrenome.Contains(nomeDoAluno)).OrderBy(alu => alu.PrimeiroNome).ToListAsync() ;
+
+        public async Task<IEnumerable<Aluno>> ObterAlunoPeloNomeComposto(string primeiroNome, string sobrenome) => await _context.Alunos.Where(alu => alu.PrimeiroNome.Contains(primeiroNome) && alu.Sobrenome.Contains(sobrenome)).OrderBy(alu => alu.PrimeiroNome).ToListAsync();
+
 
         public async Task<IEnumerable<Nota>> ObterNotasDoAluno(int alunoId) => await _context.Notas.Where(not => not.AlunoId == alunoId).ToListAsync();
 
-        public async Task<Aluno> ObterAlunoPelaMatricula(string matriculaDoAluno) => await _context.Alunos.FirstOrDefaultAsync(alu => alu.Matricula == matriculaDoAluno);
+        public async Task<Aluno> ObterAlunoPeloProntuario(string matriculaDoAluno) => await _context.Alunos.FirstOrDefaultAsync(alu => alu.Prontuario == matriculaDoAluno);
 
-        public async Task<IEnumerable<string>> ObterTodosOsNumerosDeMatricula() => await _context.Alunos.Select(alu => alu.Matricula).ToListAsync();
+        public async Task<IEnumerable<string>> ObterProntuarios() => await _context.Alunos.Select(alu => alu.Prontuario).ToListAsync();
 
         public async Task<bool> CriarAluno(Aluno aluno)
         {

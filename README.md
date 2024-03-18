@@ -1,7 +1,7 @@
 ﻿## API de gerenciamento acadêmico
 
 Olá! Desenvolvi uma API relacionada a gestão acadêmica. A API foi desenvolvida em C# com .NET Core 3.1 e Entity Framework Core. 
-A API foi desenvolvida para ser consumida por um aplicativo web que será desenvolvido em React posteriormente.
+O serviço foi criado para ser consumido por um aplicativo web que será desenvolvido posteriormente.
 
 ## Como rodar a API
 
@@ -9,12 +9,12 @@ A API foi desenvolvida para ser consumida por um aplicativo web que será desenv
 2. Abra o projeto no Visual Studio
 3. Abra o arquivo `appsettings.json` e altere a string de conexão com o banco de dados para a sua string de conexão.
 4. Certifique-se de ter o pacote "Microsoft.EntityFrameworkCore.Tools" instalado.
-5. Abra o Console do Gerenciador de Pacotes do Visual Studio e execute o comando `Add-Migration GerandoDados` e depois `update-database` para criar o banco de dados.
-6. Execute o projeto.
+5. Abra o Console do Gerenciador de Pacotes do Visual Studio e execute o comando `Update-Database` para adicionar às tabelas ao banco de dados.
+6. Execute o projeto com `dotnet watch run`.
 
-## Criação de cursos
+## Cursos
 
- Para criar um curso, faça uma requisição POST para a rota `/api/curso` com o seguinte padrão:
+ 1 - Para criar um curso, faça uma requisição POST para a rota `/api/curso` com o seguinte padrão:
 
 ```json
 {
@@ -38,31 +38,104 @@ A API foi desenvolvida para ser consumida por um aplicativo web que será desenv
 - O campo `categoriaDoCurso` é a categoria do curso e deve ser escolhido entre "Bacharelado", "Licenciatura" ou "Tecnólogo".
 - O campo `cargaHoraria` é a carga horária do curso em horas.
 
-## Criação de professores
+2 - Para listar todos os cursos, faça uma requisição GET para a rota `/api/curso`.
 
-Para criar um professor, faça uma requisição POST para a rota `/api/professor` com o seguinte padrão:
+3 - Para listar um curso específico, faça uma requisição GET para a rota `/api/curso/{id}`.
+
+4 - Para listar cursos pelo nome, faça uma requisição GET para a rota `/api/curso/{nomeDoCurso}`.
+
+5 - Para atualizar um curso, faça uma requisição PUT para a rota `/api/curso/{id}/atualizar` com o seguinte padrão de corpo:
 
 ```json
 {
-	"primeiroNome": "John",
-    "sobrenome": "Doe",
-    "dataDeNascimento": "01/01/2000",
-    "cpf": "000.000.000-00",
+	"id": 1,
+	"nomeDoCurso": "Análise e Desenvolvimento de Sistemas",
+	"quantidadeDeSemestres": 6,
+	"vagasNoPrimeiroSemestre": 40,
+	"vagasNoSegundoSemestre": 40,
+	"duracaoDoSemestreEmSemanas": 19,
+	"modalidade": "Presencial", 
+	"turno": "Noturno", 
+	"categoriaDoCurso": "Técnologo", 
+	"cargaHoraria": 2000 
+}
+```
+
+## Professores
+
+1 - Para criar um professor, faça uma requisição POST para a rota `/api/professor` com o seguinte padrão:
+
+```json
+{
+    "primeiroNome": "Marcos",
+    "sobrenome": "Mariano Mezenga",
+    "dataDeNascimento": "01/04/1982",
+    "cidadeDeNascimento": "Maracanaú",
+    "estadoDeNascimento": "Ceará",
+    "paisDeNascimento": "Brasil",
+    "cpf": "04444564789",
+    "cep": "09999990",
     "genero": "Masculino",
-    "endereco": "Rua das Laranjeiras, 140 - São Gonçalo, RJ",
-    "enderecoDeEmail": "user@example.com",
+    "bairro": "Vila Mariana",
+    "rua": "Rua das Flores",
+    "numero": "182",
+    "complemento": "B",
+    "cidade": "São Paulo",
+    "email": "mezenga82@example.com",
     "numeroDeTelefone": "+55 11 99999-9999"
 }
 ```
 
-- O nome completo do aluno será gerado com base no primeiro nome e sobrenome.
-- A data de nascimento deve ser no formato "dd/MM/yyyy".
-- O campo CPF deve ser um número de 14 dígitos, no padrão "000.000.000-00".
-- O campo de genero deve ser escolhido entre "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero" ou "Transgênero".
+- `dataDeNascimento` deve ser no formato "dd/MM/yyyy". Qualquer data de nascimento que seja diferente desse padrão será considerada inválida.
+- O campo `cpf` deve ser um número de 11 dígitos, no padrão "00000000000", sem pontos ou traços. Esse campo possui verificação de CPF válidos, ou seja, CPFs que não seguem as regras da Receita Federal.
+- O campo de `genero` deve ser escolhido entre "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero" ou "Transgênero".
+- O campo `cep` deve ser um número de 8 dígitos, somente dígitos.
+- O campo `complemento` pode ser nulo.
+- O campo `email` possui regras de validação, permitindo até 4 domínios pós '@'.
+- O campo do `numeroDeTelefone` deve, preferencialmente, seguir o padrão internacional de números de telefone. Ex: "+55 11 99999-9999".
 
-## Criação de disciplinas
+O prontuário do professor é gerado automaticamente pelo sistema. O prontuário é composto por "SP" + Número entre 100000 e 999999 + "P". Ex: "SP456541P".
 
-Para criar uma disciplina, faça uma requisição POST para a rota `/api/disciplina` com o seguinte padrão:
+2 - Para listar todos os professores, faça uma requisição GET para a rota `/api/professor`.
+
+3 - Para listar um professor específico, faça uma requisição GET para a rota `/api/professor/{id}`.
+
+4 - Para listar professores pelo nome, faça uma requisição GET para a rota `/api/professor/{nomeDoProfessor}`.
+
+5 - Para atualizar um professor, faça uma requisição PUT para a rota `/api/professor/{id}/atualizar` com o seguinte padrão de corpo:
+
+```json
+{
+	"id": 1,
+	"primeiroNome": "Marcos",
+	"sobrenome": "Mariano Mezenga",
+	"dataDeNascimento": "01/04/1982",
+	"cidadeDeNascimento": "Maracanaú",
+	"estadoDeNascimento": "Ceará",
+	"paisDeNascimento": "Brasil",
+	"cpf": "04444564789",
+	"cep": "09999990",
+	"genero": "Masculino",
+	"bairro": "Vila Mariana",
+	"rua": "Rua das Flores",
+	"numero": "182",
+	"complemento": "B",
+	"cidade": "São Paulo",
+	"email": "mezenga82@example.com",
+    "numeroDeTelefone": "+55 11 99999-9999"
+}
+```
+
+Lembrando que alguns dados são imutáveis, como o CPF, data de nascimento, período de ingresso e o prontuário do professor. Mantenha esses campos inalterados.
+
+
+6 - Para deletar um professor, faça uma requisição DELETE para a rota `/api/professor/{id}/excluir`.
+
+
+
+## Disciplinas
+
+1 - Para criar uma disciplina, faça uma requisição POST para a rota `/api/disciplina` com o seguinte padrão:
 
 ```json
 {
@@ -81,36 +154,102 @@ Para criar uma disciplina, faça uma requisição POST para a rota `/api/discipl
 - O campo `aulasPorSemana` é a quantidade de aulas que a disciplina possui por semana. E cada semestre do curso não pode exceder 25 aulas por semana.
 - O campo `semestreDeReferencia` é o semestre em que a disciplina é ministrada.
 - O campo `situacaoDaDisciplina` é a situação da disciplina e deve ser escolhido entre "Em andamento" ou "Fechada".
+- O campo `professorId` é o Id do professor que ministrará a disciplina.
+- O campo `cursoId` é o Id do curso que a disciplina pertence.
 
-## Criação de alunos
+2 - Para listar todas as disciplinas da instituição de ensino, faça uma requisição GET para a rota `/api/disciplina`.
 
-Para criar um aluno, faça uma requisição POST para a rota `/api/aluno` com o seguinte padrão:
+3 - Para listar as disciplinas de um curso específico, faça uma requisição GET para a rota `/api/disciplina/{cursoId}/curso/disciplinas`.
+
+4 - Para listar uma disciplina específica, faça uma requisição GET para a rota `/api/disciplina/{disciplinaId}/id`.
+
+5 - Para listar disciplinas pelo nome, faça uma requisição GET para a rota `/api/disciplina/{nomeDaDisciplina}`.
+
+6 - Para listar as disciplinas que um professor ministra, faça uma requisição GET para a rota `/api/disciplina/{professorId}/professor/disciplinas`.
+
+## Alunos
+
+1 - Para criar um aluno, faça uma requisição POST para a rota `/api/aluno` com o seguinte padrão:
 
 ```json
 {
-	"primeiroNome": "John",
-    "sobrenome": "Doe",
-    "dataDeNascimento": "01/01/2000",
-    "cpf": "000.000.000-00",
+	"primeiroNome": "Marcos",
+    "sobrenome": "Mariano Mezenga",
+    "dataDeNascimento": "01/04/1982",
+    "cidadeDeNascimento": "Maracanaú",
+    "estadoDeNascimento": "Ceará",
+    "paisDeNascimento": "Brasil",
+    "cpf": "04444564789",
+    "cep": "09999990",
     "genero": "Masculino",
-    "endereco": "Rua das Laranjeiras, 140 - São Gonçalo, RJ",
-    "enderecoDeEmail": "user@example.com",
-    "numeroDeTelefone": "+55 11 99999-9999",
+    "bairro": "Vila Mariana",
+    "rua": "Rua das Flores",
+    "numero": "182",
+    "complemento": "B",
+    "cidade": "São Paulo",
+    "email": "mezenga82@example.com",
+    "numeroDeTelefone": "+55 11 99999-9999"
     "cursoId": 1,
     "statusDoAluno": "Matriculado"
 }
 ```
 
-- O nome completo do aluno será gerado com base no primeiro nome e sobrenome.
-- A data de nascimento deve ser no formato "dd/MM/yyyy".
-- O campo CPF deve ser um número de 11 dígitos, sem pontos ou traços.
-- O campo de genero deve ser escolhido entre "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero" ou "Transgênero".
+- `dataDeNascimento` deve ser no formato "dd/MM/yyyy". Qualquer data de nascimento que seja diferente desse padrão será considerada inválida.
+- O campo `cpf` deve ser um número de 11 dígitos, no padrão "00000000000", sem pontos ou traços. Esse campo possui verificação de CPF válidos, ou seja, CPFs que não seguem as regras da Receita Federal.
+- O campo de `genero` deve ser escolhido entre "Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero" ou "Transgênero".
+- O campo `cep` deve ser um número de 8 dígitos, somente dígitos.
+- O campo `complemento` pode ser nulo.
+- O campo `email` possui regras de validação, permitindo até 4 domínios pós '@'.
+- O campo do `numeroDeTelefone` deve, preferencialmente, seguir o padrão internacional de números de telefone. Ex: "+55 11 99999-9999".
 - O campo `cursoId` é o Id do curso que o aluno deseja cursar.
+- O campo `statusDoAluno` é o status do aluno e deve ser escolhido entre "Matriculado", "Trancado", "Desistente" ou "Formado".
+
+O prontuário do aluno é gerado automaticamente pelo sistema. O prontuário é composto por "SP" + Número entre 1000000 e 9999999. Ex: "SP4565414".
 
 Ao criar um aluno, o sistema automaticamente o adiciona nas disciplinas do primeiro semestre do curso escolhido. Além de ser criado a grade de notas para cada disciplina.
 Após as notas se fecharem, o índice de rendimento do aluno é calculado e salvo no banco de dados.
 
-## Alteração de notas
+2 - Para listar todos os alunos da instituição de ensino, faça uma requisição GET para a rota `/api/aluno`.
+
+3 - Para listar um aluno específico, faça uma requisição GET para a rota `/api/aluno/{id}`.
+
+4 - Para listar alunos pelo nome, faça uma requisição GET para a rota `/api/aluno/{nomeDoAluno}`.
+
+5 - Para listar as disciplinas que um aluno está matriculado ou já cursou anteriormente, faça uma requisição GET para a rota `/api/aluno/{alunoId}/disciplinas`.
+
+6 - Para consultar as notas de um aluno, faça uma requisição GET para a rota `/api/aluno/{alunoId}/notas`.
+
+7 - Para atualizar um aluno, faça uma requisição PUT para a rota `/api/aluno/{id}/atualizar` com o seguinte padrão de corpo:
+
+```json
+{
+	"id": 1,
+	"primeiroNome": "Marcos",
+	"sobrenome": "Mariano Mezenga",
+	"dataDeNascimento": "01/04/1982",
+	"cidadeDeNascimento": "Maracanaú",
+	"estadoDeNascimento": "Ceará",
+	"paisDeNascimento": "Brasil",
+	"cpf": "04444564789",
+	"cep": "09999990",
+	"genero": "Masculino",
+	"bairro": "Vila Mariana",
+	"rua": "Rua das Flores",
+	"numero": "182",
+	"complemento": "B",
+	"cidade": "São Paulo",
+	"email": "mezenga82@example.com",
+    "numeroDeTelefone": "+55 11 99999-9999"
+    "statusDoAluno": "Formado"
+
+}
+```
+
+Lembrando que alguns dados são imutáveis, como o CPF, data de nascimento, período de ingresso e o prontuário do aluno. Mantenha esses campos inalterados.
+
+8 - Para deletar um aluno, faça uma requisição DELETE para a rota `/api/aluno/{id}/excluir`.
+
+## Notas
 
 Para alterar as notas de um aluno, faça uma requisição PUT para a rota `/api/nota/{notaId}/atualizar` com o seguinte padrão:
 

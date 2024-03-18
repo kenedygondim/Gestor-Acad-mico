@@ -1,6 +1,7 @@
 ﻿
 
 using Gestor_Acadêmico.Models;
+using Microsoft.Extensions.WebEncoders.Testing;
 using System.Text.RegularExpressions;
 
 namespace Gestor_Acadêmico.Validation
@@ -8,7 +9,7 @@ namespace Gestor_Acadêmico.Validation
     public static class ProfessorValidation
     {
         static readonly string[] generos = ["Masculino", "Feminino", "Não-binário", "Gênero fluido", "Agênero", "Bigênero", "Travesti", "Cisgênero", "Transgênero"];
-        static readonly string patternCpf = @"(\d{3}\.){2}\d{3}-\d{2}";
+        static readonly string patternCpf = @"^[0-9]{11}$";
         static readonly string patternEmail = @"([a-z0-9\.\-_]{2,})@([a-z0-9]{2,})(\.[a-z]{2,})?(\.[a-z]{2,})?(\.[a-z]{2,})";
         static readonly string patternNumeroDeTelefone = @"(\d{2})\s(\d{4,5}-\d{4})";
 
@@ -17,8 +18,20 @@ namespace Gestor_Acadêmico.Validation
         public static bool ValidarEmail(string email) => Regex.IsMatch(email, patternEmail);
         public static bool ValidarNumeroDeTelefone(string? numeroDeTelefone) => Regex.IsMatch(numeroDeTelefone, patternNumeroDeTelefone);
         public static bool ValidarGenero(string genero) => generos.Contains(genero);
+        public static bool ValidarDataDeNascimento(string dataDeNascimento) => DateTime.TryParse(dataDeNascimento, out _);
+        public static string GerarProntuarioAleatorio(IEnumerable<string> prontuariosEmUso)
+        {
+            Random random = new ();
+            string prontuarioAleatorio;
 
-        public static bool ValidarCriacaoDoProfessor(Professor professor, out string errorMessage)
+            do
+                prontuarioAleatorio = $"SP{random.Next(100000, 999999)}P";
+            while (prontuariosEmUso.Contains(prontuarioAleatorio));
+
+            return prontuarioAleatorio;
+        }
+
+        public static bool ValidarCriacaoDoProfessor(Professor professor, IEnumerable<string> prontuariosEmUso, out string errorMessage)
         {
             if (professor == null)
             {
@@ -32,13 +45,19 @@ namespace Gestor_Acadêmico.Validation
                 return false;
             }
 
-            if (!ValidarCpf(professor.Cpf))
+            if (!ValidarDataDeNascimento(professor.DataDeNascimento))
             {
-                errorMessage = "CPF inválido! Padrão desejado: XXX.XXX.XXX-XX";
+                errorMessage = "Data de nascimento inválida! Padrão desejado: DD/MM/AAAA";
                 return false;
             }
 
-            if (!ValidarEmail(professor.EnderecoDeEmail))
+            if (!ValidarCpf(professor.Cpf))
+            {
+                errorMessage = "CPF inválido! Insira apenas os números do CPF.";
+                return false;
+            }
+
+            if (!ValidarEmail(professor.Email))
             {
                 errorMessage = "Endereço de e-mail inválido!";
                 return false;
@@ -50,7 +69,7 @@ namespace Gestor_Acadêmico.Validation
                 return false;
             }
 
-            professor.NomeCompleto = ObterNomeCompleto(professor.PrimeiroNome, professor.Sobrenome);
+           professor.Prontuario = GerarProntuarioAleatorio(prontuariosEmUso);
 
             errorMessage = string.Empty;
             return true;
@@ -64,7 +83,7 @@ namespace Gestor_Acadêmico.Validation
                 return false;
             }
 
-            if (professor.Id != professorAtualizado.Id)
+            if (professor.Prontuario != professorAtualizado.Prontuario)
             {
                 errorMessage = "Ocorreu um erro na validação dos identificadores.";
                 return false;
@@ -104,10 +123,10 @@ namespace Gestor_Acadêmico.Validation
         {
             professor.PrimeiroNome = professorAtualizado.PrimeiroNome;
             professor.Sobrenome = professorAtualizado.Sobrenome;
-            professor.NomeCompleto = ObterNomeCompleto(professorAtualizado.PrimeiroNome, professorAtualizado.Sobrenome);
-            professor.EnderecoDeEmail = professorAtualizado.EnderecoDeEmail;
+            //professor.NomeCompleto = ObterNomeCompleto(professorAtualizado.PrimeiroNome, professorAtualizado.Sobrenome);
+            //professor.EnderecoDeEmail = professorAtualizado.EnderecoDeEmail;
             professor.NumeroDeTelefone = professorAtualizado.NumeroDeTelefone;
-            professor.Endereco = professorAtualizado.Endereco;
+            //professor.Endereco = professorAtualizado.Endereco;
             professor.Genero = professorAtualizado.Genero;
         }
 

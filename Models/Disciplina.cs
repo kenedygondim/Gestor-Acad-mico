@@ -6,9 +6,9 @@ namespace Gestor_Acadêmico.Models
     {
         [Key]
         public int Id { get; set; }
-        [Length(10, 70)]
+        [Length(2, 70)]
         public required string NomeDaDisciplina { get; set; } 
-        [Length(5, 7)]
+        [Length(7, 7)]
         //Exemplo: SPOMATI, SPOENG1
         public required string CodigoDaDisciplina { get; set; }
         [Range(1, 100)]
@@ -16,10 +16,10 @@ namespace Gestor_Acadêmico.Models
         [Range(1, 10)]
         public required int AulasPorSemana { get; set; }
         public required int SemestreDeReferencia { get; set; }
-        //Em aberto, Fechada, Aguardando início do semestre...
+        //Ativa, Fechada, Aguardando aprovação...
         public required string SituacaoDaDisciplina { get; set; } 
-        public required int ProfessorId { get; set; }
-        public required int CursoId { get; set; }
+        public int? ProfessorId { get; set; }
+        public int? CursoId { get; set; }
         public Professor? Professor { get; set; }
         public Curso? Curso { get; set; }
         public IEnumerable<AlunoDisciplina>? Alunos { get; set; }

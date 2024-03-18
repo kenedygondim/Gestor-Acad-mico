@@ -5,7 +5,6 @@ using Gestor_Acadêmico.Interfaces;
 using Gestor_Acadêmico.Models;
 using Gestor_Acadêmico.Validation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Gestor_Acadêmico.Controllers
 {
@@ -15,7 +14,6 @@ namespace Gestor_Acadêmico.Controllers
         (
         INotaRepository NotaRepository,
         IAlunoRepository alunoRepository,
-        IDisciplinaRepository disciplinaRepository,
         GestorAcademicoContext context,
         IMapper mapper
         ) 
@@ -51,7 +49,7 @@ namespace Gestor_Acadêmico.Controllers
                 if (aluno.Notas.Any())
                 {
                     var teste = aluno.Notas.Where(not => not.NotasFechadas).ToList();
-                    aluno.IRA = teste.Sum(not => not.MediaGeral) / teste.Count();
+                    aluno.IRA = teste.Sum(not => not.MediaGeral) / teste.Count;
                 }
 
                await _alunoRepository.AtualizarAluno(aluno);

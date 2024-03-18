@@ -13,7 +13,9 @@ namespace Gestor_Acadêmico.Repositories
 
         public async Task<Professor> ObterProfessorPeloId(int professorId) => await _context.Professores.FirstOrDefaultAsync(pro => pro.Id == professorId);
 
-        public async Task<IEnumerable<Professor>> ObterProfessorPeloNome(string nomeDoProfessor) => await _context.Professores.Where(pro => pro.NomeCompleto.Contains(nomeDoProfessor)).ToListAsync();
+        //public async Task<IEnumerable<Professor>> ObterProfessorPeloNome(string nomeDoProfessor) => await _context.Professores.Where(pro => pro.NomeCompleto.Contains(nomeDoProfessor)).ToListAsync();
+
+        public async Task<IEnumerable<string>> ObterProntuarios() => await _context.Professores.Select(pro => pro.Prontuario).ToListAsync();
 
         public async Task<bool> CriarProfessor(Professor professor)
         {
@@ -38,5 +40,7 @@ namespace Gestor_Acadêmico.Repositories
             var saved = await _context.SaveChangesAsync();
             return saved > 0;
         }
+
+        
     }
 }

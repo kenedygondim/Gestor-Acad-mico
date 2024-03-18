@@ -29,6 +29,8 @@ namespace Gestor_Acadêmico.Validation
             nota.PrimeiraAvaliacao = notasRecebidas.PrimeiraAvaliacao;
             nota.SegundaAvaliacao = notasRecebidas.SegundaAvaliacao;
             nota.Atividades = notasRecebidas.Atividades;
+            nota.AlunoId = nota.AlunoId;
+            nota.DisciplinaId = nota.DisciplinaId;
             nota.MediaGeral = ((nota.PrimeiraAvaliacao + nota.SegundaAvaliacao + nota.Atividades) / 3);
             nota.NotasFechadas = notasRecebidas.NotasFechadas;
             nota.Aprovado = VerificaAprovacao(nota);
@@ -36,7 +38,7 @@ namespace Gestor_Acadêmico.Validation
 
         public static bool VerificaAprovacao(Nota nota)
         {
-            return nota.NotasFechadas && nota.MediaGeral > 6 && nota.FrequenciaDoAluno > 75;
+            return nota.NotasFechadas && nota.MediaGeral >= 6 && nota.FrequenciaDoAluno > 75;
         }
 
     }

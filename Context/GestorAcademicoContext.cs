@@ -53,7 +53,7 @@ namespace Gestor_Acadêmico.Context
                 .IsUnique();
 
             modelBuilder.Entity<Aluno>()
-                .HasIndex(alu => alu.EnderecoDeEmail)
+                .HasIndex(alu => alu.Email)
                 .IsUnique();
 
             modelBuilder.Entity<Professor>()
@@ -61,7 +61,7 @@ namespace Gestor_Acadêmico.Context
                 .IsUnique();
 
             modelBuilder.Entity<Professor>()
-                .HasIndex(pro => pro.EnderecoDeEmail)
+                .HasIndex(pro => pro.Email)
                 .IsUnique();
 
             modelBuilder.Entity<Curso>()
@@ -69,7 +69,11 @@ namespace Gestor_Acadêmico.Context
                 .IsUnique();
 
             modelBuilder.Entity<Aluno>()
-                .HasIndex(alu => alu.Matricula)
+                .HasIndex(alu => alu.Prontuario)
+                .IsUnique();
+
+            modelBuilder.Entity<Professor>()
+                .HasIndex(pro => pro.Prontuario)
                 .IsUnique();
 
             //declaração das relações entre as entidades

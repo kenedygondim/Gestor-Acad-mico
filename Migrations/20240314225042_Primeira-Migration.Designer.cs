@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gestor_Acadêmico.Migrations
 {
     [DbContext(typeof(GestorAcademicoContext))]
-    [Migration("20240123223125_TestandoNovasPropriedades")]
-    partial class TestandoNovasPropriedades
+    [Migration("20240314225042_Primeira-Migration")]
+    partial class PrimeiraMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,24 +33,39 @@ namespace Gestor_Acadêmico.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Bairro")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cidade")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CidadeDeNascimento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Complemento")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Cpf")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CursoId")
+                    b.Property<int?>("CursoId")
                         .HasColumnType("int");
 
                     b.Property<string>("DataDeNascimento")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Endereco")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EnderecoDeEmail")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EstadoDeNascimento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Genero")
                         .IsRequired()
@@ -59,19 +74,28 @@ namespace Gestor_Acadêmico.Migrations
                     b.Property<decimal?>("IRA")
                         .HasColumnType("decimal(4,2)");
 
-                    b.Property<string>("Matricula")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("NomeCompleto")
+                    b.Property<string>("Numero")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NumeroDeTelefone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaisDeNascimento")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PeriodoDeIngresso")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrimeiroNome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prontuario")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Rua")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -90,12 +114,12 @@ namespace Gestor_Acadêmico.Migrations
 
                     b.HasIndex("CursoId");
 
-                    b.HasIndex("EnderecoDeEmail")
+                    b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("Matricula")
+                    b.HasIndex("Prontuario")
                         .IsUnique()
-                        .HasFilter("[Matricula] IS NOT NULL");
+                        .HasFilter("[Prontuario] IS NOT NULL");
 
                     b.ToTable("Alunos");
                 });
@@ -180,14 +204,14 @@ namespace Gestor_Acadêmico.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CursoId")
+                    b.Property<int>("CursoId")
                         .HasColumnType("int");
 
                     b.Property<string>("NomeDaDisciplina")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProfessorId")
+                    b.Property<int>("ProfessorId")
                         .HasColumnType("int");
 
                     b.Property<int>("SemestreDeReferencia")
@@ -220,33 +244,32 @@ namespace Gestor_Acadêmico.Migrations
                     b.Property<bool?>("Aprovado")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Atividades")
+                    b.Property<decimal?>("Atividades")
                         .HasColumnType("decimal(4,2)");
 
                     b.Property<int>("DisciplinaId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Frequencia")
+                    b.Property<decimal?>("FrequenciaDoAluno")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<decimal?>("MediaGeral")
                         .HasColumnType("decimal(4,2)");
 
-                    b.Property<decimal>("MediaGeral")
-                        .HasColumnType("decimal(4,2)");
-
-                    b.Property<bool?>("NotasFechadas")
+                    b.Property<bool>("NotasFechadas")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("PrimeiraAvaliacao")
+                    b.Property<decimal?>("PrimeiraAvaliacao")
                         .HasColumnType("decimal(4,2)");
 
-                    b.Property<decimal>("SegundaAvaliacao")
+                    b.Property<decimal?>("SegundaAvaliacao")
                         .HasColumnType("decimal(4,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AlunoId");
 
-                    b.HasIndex("DisciplinaId")
-                        .IsUnique();
+                    b.HasIndex("DisciplinaId");
 
                     b.ToTable("Notas");
                 });
@@ -259,6 +282,21 @@ namespace Gestor_Acadêmico.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Bairro")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cidade")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CidadeDeNascimento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Complemento")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Cpf")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -267,25 +305,37 @@ namespace Gestor_Acadêmico.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Endereco")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EnderecoDeEmail")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EstadoDeNascimento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Genero")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NomeCompleto")
+                    b.Property<string>("Numero")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NumeroDeTelefone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PaisDeNascimento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PrimeiroNome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prontuario")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Rua")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -298,8 +348,12 @@ namespace Gestor_Acadêmico.Migrations
                     b.HasIndex("Cpf")
                         .IsUnique();
 
-                    b.HasIndex("EnderecoDeEmail")
+                    b.HasIndex("Email")
                         .IsUnique();
+
+                    b.HasIndex("Prontuario")
+                        .IsUnique()
+                        .HasFilter("[Prontuario] IS NOT NULL");
 
                     b.ToTable("Professores");
                 });
@@ -309,8 +363,7 @@ namespace Gestor_Acadêmico.Migrations
                     b.HasOne("Gestor_Acadêmico.Models.Curso", "Curso")
                         .WithMany("Alunos")
                         .HasForeignKey("CursoId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Curso");
                 });
@@ -339,12 +392,14 @@ namespace Gestor_Acadêmico.Migrations
                     b.HasOne("Gestor_Acadêmico.Models.Curso", "Curso")
                         .WithMany("Disciplinas")
                         .HasForeignKey("CursoId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("Gestor_Acadêmico.Models.Professor", "Professor")
                         .WithMany("Disciplinas")
                         .HasForeignKey("ProfessorId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("Curso");
 
@@ -360,8 +415,8 @@ namespace Gestor_Acadêmico.Migrations
                         .IsRequired();
 
                     b.HasOne("Gestor_Acadêmico.Models.Disciplina", "Disciplina")
-                        .WithOne("Nota")
-                        .HasForeignKey("Gestor_Acadêmico.Models.Nota", "DisciplinaId")
+                        .WithMany("Notas")
+                        .HasForeignKey("DisciplinaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -388,7 +443,7 @@ namespace Gestor_Acadêmico.Migrations
                 {
                     b.Navigation("Alunos");
 
-                    b.Navigation("Nota");
+                    b.Navigation("Notas");
                 });
 
             modelBuilder.Entity("Gestor_Acadêmico.Models.Professor", b =>
