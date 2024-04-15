@@ -3,14 +3,6 @@
 Olá! Desenvolvi uma API relacionada a gestão acadêmica. A API foi desenvolvida em C# com .NET Core 3.1 e Entity Framework Core. 
 O serviço foi criado para ser consumido por um aplicativo web que será desenvolvido posteriormente.
 
-## Como rodar a API
-
-1. Clone o repositório
-2. Abra o projeto no Visual Studio
-3. Abra o arquivo `appsettings.json` e altere a string de conexão com o banco de dados para a sua string de conexão.
-4. Certifique-se de ter o pacote "Microsoft.EntityFrameworkCore.Tools" instalado.
-5. Abra o Console do Gerenciador de Pacotes do Visual Studio e execute o comando `Update-Database` para adicionar às tabelas ao banco de dados.
-6. Execute o projeto com `dotnet watch run`.
 
 ## Cursos
 
